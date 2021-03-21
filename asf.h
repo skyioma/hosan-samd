@@ -58,7 +58,6 @@
 
 // From module: Debug Print (FreeRTOS)
 #include <dbg_print.h>
-#include <quick_start_basic/qs_dbg_print_basic.h>
 
 // From module: FreeRTOS - kernel 10.0.0
 #include <FreeRTOS.h>

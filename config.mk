@@ -47,8 +47,8 @@ PART = samd21e18
 
 # Application target name. Given with suffix .a for library and .elf for a
 # standalone application.
-TARGET_FLASH = dbg_print_quick_start_flash.elf
-TARGET_SRAM = dbg_print_quick_start_sram.elf
+TARGET_FLASH = sennet-samd_flash.elf
+TARGET_SRAM = sennet-samd_sram.elf
 
 # List of C source files.
 CSRCS = \
@@ -76,7 +76,7 @@ CSRCS = \
        thirdparty/freertos/freertos-10.0.0/Source/stream_buffer.c \
        thirdparty/freertos/freertos-10.0.0/Source/tasks.c \
        thirdparty/freertos/freertos-10.0.0/Source/timers.c \
-       qs_dbg_print_basic.c
+       main.c
 
 # List of assembler source files.
 ASSRCS = 
