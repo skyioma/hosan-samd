@@ -45,21 +45,21 @@ char main_string[] = "Main task iteration: 0x00000000\r\n";
 //! [main_task_open]
 static void main_task(void *params)
 {
-	do {
+  do {
 //! [main_task_open]
 //! [main_task_1]
-		dbg_print_str("Main task loop executing\r\n");
+    dbg_print_str("Main task loop executing\r\n");
 //! [main_task_1]
 
 //! [main_task_2]
-		// Update hexadecimal 32-bit integer in string, and print it
-		dbg_sprint_hexint(&main_string[23], main_counter++);
-		dbg_print_str(main_string);
+    // Update hexadecimal 32-bit integer in string, and print it
+    dbg_sprint_hexint(&main_string[23], main_counter++);
+    dbg_print_str(main_string);
 //! [main_task_2]
 
 //! [main_task_close]
-		vTaskDelay(1000 / portTICK_RATE_MS);
-	} while(1);
+    vTaskDelay(1000 / portTICK_RATE_MS);
+  } while(1);
 }
 //! [main_task_close]
 //! [main_task]
@@ -68,20 +68,20 @@ static void main_task(void *params)
 int main (void)
 {
 //! [init_calls]
-	system_init();
-	dbg_init();
+  system_init();
+  dbg_init();
 //! [init_calls]
 
 //! [main_task_create]
-	xTaskCreate(&main_task,
-		(const char *)"Main task",
-		configMINIMAL_STACK_SIZE + 100,
-		NULL,
-		tskIDLE_PRIORITY + 2,
-		NULL);
+  xTaskCreate(&main_task,
+    (const char *)"Main task",
+    configMINIMAL_STACK_SIZE + 100,
+    NULL,
+    tskIDLE_PRIORITY + 2,
+    NULL);
 //! [main_task_create]
 
 //! [freertos_start]
-	vTaskStartScheduler();
+  vTaskStartScheduler();
 //! [freertos_start]
 }
