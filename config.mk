@@ -43,7 +43,7 @@ PRJ_PATH = $(XDK_ASF)
 ARCH = cortex-m0plus
 
 # Target part: none, sam3n4 or sam4l4aa
-PART = samd20j18
+PART = samd21e18
 
 # Application target name. Given with suffix .a for library and .elf for a
 # standalone application.
@@ -55,19 +55,18 @@ CSRCS = \
        common/services/freertos/dbg_print/dbg_print.c     \
        common/services/freertos/dbg_print/quick_start_basic/qs_dbg_print_basic.c \
        common/utils/interrupt/interrupt_sam_nvic.c        \
-       sam0/boards/samd20_xplained_pro/board_init.c       \
        sam0/drivers/port/port.c                           \
        sam0/drivers/sercom/sercom.c                       \
        sam0/drivers/sercom/sercom_interrupt.c             \
        sam0/drivers/sercom/usart/usart.c                  \
        sam0/drivers/sercom/usart/usart_interrupt.c        \
-       sam0/drivers/system/clock/clock_samd20/clock.c     \
-       sam0/drivers/system/clock/clock_samd20/gclk.c      \
+       sam0/drivers/system/clock/clock_samd21_r21_da_ha1/clock.c \
+       sam0/drivers/system/clock/clock_samd21_r21_da_ha1/gclk.c \
        sam0/drivers/system/interrupt/system_interrupt.c   \
        sam0/drivers/system/pinmux/pinmux.c                \
        sam0/drivers/system/system.c                       \
-       sam0/utils/cmsis/samd20/source/gcc/startup_samd20.c \
-       sam0/utils/cmsis/samd20/source/system_samd20.c     \
+       sam0/utils/cmsis/samd21/source/gcc/startup_samd21.c \
+       sam0/utils/cmsis/samd21/source/system_samd21.c     \
        sam0/utils/syscalls/gcc/syscalls.c                 \
        thirdparty/freertos/freertos-10.0.0/Source/croutine.c \
        thirdparty/freertos/freertos-10.0.0/Source/event_groups.c \
@@ -90,23 +89,23 @@ INC_PATH = \
        common/services/freertos/dbg_print/quick_start_basic/samd20_xplained_pro \
        common/utils                                       \
        sam0/boards                                        \
-       sam0/boards/samd20_xplained_pro                    \
+       sam0/boards/dummy                                  \
        sam0/drivers/port                                  \
        sam0/drivers/sercom                                \
        sam0/drivers/sercom/usart                          \
        sam0/drivers/system                                \
        sam0/drivers/system/clock                          \
-       sam0/drivers/system/clock/clock_samd20             \
+       sam0/drivers/system/clock/clock_samd21_r21_da_ha1  \
        sam0/drivers/system/interrupt                      \
-       sam0/drivers/system/interrupt/system_interrupt_samd20 \
+       sam0/drivers/system/interrupt/system_interrupt_samd21 \
        sam0/drivers/system/pinmux                         \
        sam0/drivers/system/power                          \
        sam0/drivers/system/power/power_sam_d_r_h          \
        sam0/drivers/system/reset                          \
        sam0/drivers/system/reset/reset_sam_d_r_h          \
        sam0/utils                                         \
-       sam0/utils/cmsis/samd20/include                    \
-       sam0/utils/cmsis/samd20/source                     \
+       sam0/utils/cmsis/samd21/include                    \
+       sam0/utils/cmsis/samd21/source                     \
        sam0/utils/header_files                            \
        sam0/utils/preprocessor                            \
        thirdparty/CMSIS/Include                           \
@@ -124,12 +123,12 @@ LIBS =  \
        arm_cortexM0l_math                                
 
 # Path relative to top level directory pointing to a linker script.
-LINKER_SCRIPT_FLASH = sam0/utils/linker_scripts/samd20/gcc/samd20j18_flash.ld
-LINKER_SCRIPT_SRAM  = sam0/utils/linker_scripts/samd20/gcc/samd20j18_sram.ld
+LINKER_SCRIPT_FLASH = sam0/utils/linker_scripts/samd21/gcc/samd21e18a_flash.ld
+LINKER_SCRIPT_SRAM  = sam0/utils/linker_scripts/samd21/gcc/samd21e18a_sram.ld
 
 # Path relative to top level directory pointing to a linker script.
-DEBUG_SCRIPT_FLASH = sam0/boards/samd20_xplained_pro/debug_scripts/gcc/samd20_xplained_pro_flash.gdb
-DEBUG_SCRIPT_SRAM  = sam0/boards/samd20_xplained_pro/debug_scripts/gcc/samd20_xplained_pro_sram.gdb
+DEBUG_SCRIPT_FLASH = sam0/boards/samd21_xplained_pro/debug_scripts/gcc/samd21_xplained_pro_flash.gdb
+DEBUG_SCRIPT_SRAM  = sam0/boards/samd21_xplained_pro/debug_scripts/gcc/samd21_xplained_pro_sram.gdb
 
 # Project type parameter: all, sram or flash
 PROJECT_TYPE        = flash
@@ -162,10 +161,10 @@ CFLAGS =
 #   EXT_BOARD  Optional extension board in use, see boards/board.h for a list.
 CPPFLAGS = \
        -D ARM_MATH_CM0PLUS=true                           \
-       -D BOARD=SAMD20_XPLAINED_PRO                       \
+       -D BOARD=DUMMY_BOARD                               \
        -D USART_CALLBACK_MODE=true                        \
        -D __FREERTOS__                                    \
-       -D __SAMD20J18__
+       -D __SAMD21E18A__
 
 # Extra flags to use when linking
 LDFLAGS = \
