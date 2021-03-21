@@ -53,7 +53,6 @@ TARGET_SRAM = dbg_print_quick_start_sram.elf
 # List of C source files.
 CSRCS = \
        common/services/freertos/dbg_print/dbg_print.c     \
-       common/services/freertos/dbg_print/quick_start_basic/qs_dbg_print_basic.c \
        common/utils/interrupt/interrupt_sam_nvic.c        \
        sam0/drivers/port/port.c                           \
        sam0/drivers/sercom/sercom.c                       \
@@ -76,7 +75,8 @@ CSRCS = \
        thirdparty/freertos/freertos-10.0.0/Source/queue.c \
        thirdparty/freertos/freertos-10.0.0/Source/stream_buffer.c \
        thirdparty/freertos/freertos-10.0.0/Source/tasks.c \
-       thirdparty/freertos/freertos-10.0.0/Source/timers.c
+       thirdparty/freertos/freertos-10.0.0/Source/timers.c \
+       qs_dbg_print_basic.c
 
 # List of assembler source files.
 ASSRCS = 
@@ -85,8 +85,6 @@ ASSRCS =
 INC_PATH = \
        common/boards                                      \
        common/services/freertos/dbg_print                 \
-       common/services/freertos/dbg_print/quick_start_basic \
-       common/services/freertos/dbg_print/quick_start_basic/samd20_xplained_pro \
        common/utils                                       \
        sam0/boards                                        \
        sam0/boards/dummy                                  \
@@ -111,8 +109,7 @@ INC_PATH = \
        thirdparty/CMSIS/Include                           \
        thirdparty/CMSIS/Lib/GCC                           \
        thirdparty/freertos/freertos-10.0.0/Source/include \
-       thirdparty/freertos/freertos-10.0.0/Source/portable/GCC/ARM_CM0 \
-       common/services/freertos/dbg_print/quick_start_basic/samd20_xplained_pro/gcc
+       thirdparty/freertos/freertos-10.0.0/Source/portable/GCC/ARM_CM0
 
 # Additional search paths for libraries.
 LIB_PATH =  \
@@ -148,7 +145,7 @@ ARFLAGS =
 ASFLAGS = 
 
 # Extra flags to use when compiling.
-CFLAGS = 
+CFLAGS = -I.
 
 # Extra flags to use when preprocessing.
 #
