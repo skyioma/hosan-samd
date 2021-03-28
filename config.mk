@@ -57,6 +57,7 @@ CSRCS = \
        sam0/drivers/port/port.c                           \
        sam0/drivers/sercom/sercom.c                       \
        sam0/drivers/sercom/sercom_interrupt.c             \
+       sam0/drivers/sercom/spi/spi.c                      \
        sam0/drivers/sercom/usart/usart.c                  \
        sam0/drivers/sercom/usart/usart_interrupt.c        \
        sam0/drivers/system/clock/clock_samd21_r21_da_ha1/clock.c \
@@ -90,6 +91,7 @@ INC_PATH = \
        sam0/boards/dummy                                  \
        sam0/drivers/port                                  \
        sam0/drivers/sercom                                \
+       sam0/drivers/sercom/spi                            \
        sam0/drivers/sercom/usart                          \
        sam0/drivers/system                                \
        sam0/drivers/system/clock                          \
@@ -159,6 +161,7 @@ CFLAGS = -I.
 CPPFLAGS = \
        -D ARM_MATH_CM0PLUS=true                           \
        -D BOARD=DUMMY_BOARD                               \
+       -D SPI_CALLBACK_MODE=false                         \
        -D USART_CALLBACK_MODE=true                        \
        -D __FREERTOS__                                    \
        -D __SAMD21E18A__
