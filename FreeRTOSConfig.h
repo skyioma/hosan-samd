@@ -50,7 +50,7 @@ void assert_triggered( const char * file, uint32_t line );
 #define configUSE_IDLE_HOOK                     0
 #define configUSE_TICK_HOOK                     0
 #define configPRIO_BITS                         2
-#define configCPU_CLOCK_HZ                      ( 48000000 )
+#define configCPU_CLOCK_HZ                      ( 8000000 )
 #define configTICK_RATE_HZ                      ( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES                    ( 5 )
 #define configMINIMAL_STACK_SIZE                ( ( unsigned short ) 100 )
