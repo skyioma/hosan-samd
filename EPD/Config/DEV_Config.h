@@ -48,10 +48,12 @@
 #ifndef _DEV_CONFIG_H_
 #define _DEV_CONFIG_H_
 
-#include "main.h"
-#include "stm32f1xx_hal.h"
-#include "stm32f1xx_hal_gpio.h"
 #include <stdint.h>
+
+#include <asf.h>
+#include "conf_board.h"
+#include "hal_delay.h"
+#include "hal_gpio.h"
 
 /**
  * data
@@ -63,21 +65,21 @@
 /**
  * e-Paper GPIO
 **/
-#define EPD_RST_PIN     RST_GPIO_Port, RST_Pin
-#define EPD_DC_PIN      DC_GPIO_Port, DC_Pin
-#define EPD_CS_PIN      SPI_CS_GPIO_Port, SPI_CS_Pin
-#define EPD_BUSY_PIN    BUSY_GPIO_Port, BUSY_Pin
+#define EPD_RST_PIN     E_RST_PIN
+#define EPD_DC_PIN      E_DC_PIN
+#define EPD_CS_PIN      E_CS_PIN
+#define EPD_BUSY_PIN    E_BUSY_PIN
 
 /**
  * GPIO read and write
 **/
-#define DEV_Digital_Write(_pin, _value) HAL_GPIO_WritePin(_pin, _value == 0? GPIO_PIN_RESET:GPIO_PIN_SET)
-#define DEV_Digital_Read(_pin) HAL_GPIO_ReadPin(_pin)
+#define DEV_Digital_Write(_pin, _value) hal_gpio_set(_pin, _value)
+#define DEV_Digital_Read(_pin) hal_gpio_get(_pin)
 
 /**
  * delay x ms
 **/
-#define DEV_Delay_ms(__xms) HAL_Delay(__xms);
+#define DEV_Delay_ms(__xms) hal_delay_ms(__xms)
 
 void DEV_SPI_WriteByte(UBYTE value);
 

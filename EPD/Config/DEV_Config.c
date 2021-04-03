@@ -30,12 +30,11 @@
 #
 ******************************************************************************/
 #include "DEV_Config.h"
-#include "stm32f1xx_hal_spi.h"
+#include "hal_spi.h"
 
-extern SPI_HandleTypeDef hspi1;
 void DEV_SPI_WriteByte(UBYTE value)
 {
-    HAL_SPI_Transmit(&hspi1, &value, 1, 1000);
+    hal_spi_write_byte(value);
 }
 
 int DEV_Module_Init(void)
