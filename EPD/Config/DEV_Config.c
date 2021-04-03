@@ -30,6 +30,7 @@
 #
 ******************************************************************************/
 #include "DEV_Config.h"
+
 #include "hal_spi.h"
 
 void DEV_SPI_WriteByte(UBYTE value)
