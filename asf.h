@@ -59,6 +59,9 @@
 // From module: Debug Print (FreeRTOS)
 #include <dbg_print.h>
 
+// From module: Delay routines
+#include <delay.h>
+
 // From module: FreeRTOS - kernel 10.0.0
 #include <FreeRTOS.h>
 #include <stack_macros.h>

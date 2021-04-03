@@ -54,6 +54,7 @@ TARGET_SRAM = sennet-samd_sram.elf
 CSRCS = \
        common/services/freertos/dbg_print/dbg_print.c     \
        common/utils/interrupt/interrupt_sam_nvic.c        \
+       common2/services/delay/sam0/cycle_counter.c        \
        sam0/drivers/port/port.c                           \
        sam0/drivers/sercom/sercom.c                       \
        sam0/drivers/sercom/sercom_interrupt.c             \
@@ -77,6 +78,7 @@ CSRCS = \
        thirdparty/freertos/freertos-10.0.0/Source/stream_buffer.c \
        thirdparty/freertos/freertos-10.0.0/Source/tasks.c \
        thirdparty/freertos/freertos-10.0.0/Source/timers.c \
+       hal_delay.c                                         \
        hal_gpio.c                                          \
        hal_spi.c                                           \
        main.c
@@ -89,6 +91,8 @@ INC_PATH = \
        common/boards                                      \
        common/services/freertos/dbg_print                 \
        common/utils                                       \
+       common2/services/delay                             \
+       common2/services/delay/sam0                        \
        sam0/boards                                        \
        sam0/boards/dummy                                  \
        sam0/drivers/port                                  \
@@ -163,6 +167,7 @@ CFLAGS = -I.
 CPPFLAGS = \
        -D ARM_MATH_CM0PLUS=true                           \
        -D BOARD=DUMMY_BOARD                               \
+       -D CYCLE_MODE -D F_CPU=8000000                     \
        -D SPI_CALLBACK_MODE=false                         \
        -D USART_CALLBACK_MODE=true                        \
        -D __FREERTOS__                                    \
