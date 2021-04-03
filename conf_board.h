@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Xplained Pro board configuration.
+ * \brief SAM D21 dummy board configuration.
  *
  * Copyright (c) 2012-2018 Microchip Technology Inc. and its subsidiaries.
  *
