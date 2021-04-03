@@ -87,8 +87,10 @@ int EPD_2in13_test(void)
     Paint_DrawString_EN(140, 15, "waveshare", &Font16, BLACK, WHITE);
     Paint_DrawNum(140, 40, 123456789, &Font16, BLACK, WHITE);
 
+#if 0
     Paint_DrawString_CN(140, 60, "ÄãºÃabc", &Font12CN, BLACK, WHITE);
     Paint_DrawString_CN(5, 65, "Î¢Ñ©µç×Ó", &Font24CN, WHITE, BLACK);
+#endif
 
     EPD_2IN13_Display(BlackImage);
     DEV_Delay_ms(2000);
