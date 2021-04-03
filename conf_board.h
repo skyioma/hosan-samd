@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Xplained Pro board configuration.
+ * \brief SAM D21 dummy board configuration.
  *
  * Copyright (c) 2012-2018 Microchip Technology Inc. and its subsidiaries.
  *
@@ -43,5 +43,33 @@
 #define DEBUG_USART_SERCOM_PINMUX_PAD1 PINMUX_PA01D_SERCOM1_PAD1
 #define DEBUG_USART_SERCOM_PINMUX_PAD2 PINMUX_UNUSED
 #define DEBUG_USART_SERCOM_PINMUX_PAD3 PINMUX_UNUSED
+
+// MISO @ PA08
+// MOSI @ PA10
+// SCK @ PA11
+#define SPI_MODULE                     SERCOM0
+#define SPI_MUX_SETTING                SPI_SIGNAL_MUX_SETTING_E
+#define SPI_PINMUX_PAD0                PINMUX_PA08C_SERCOM0_PAD0
+#define SPI_PINMUX_PAD1                PINMUX_UNUSED
+#define SPI_PINMUX_PAD2                PINMUX_PA10C_SERCOM0_PAD2
+#define SPI_PINMUX_PAD3                PINMUX_PA11C_SERCOM0_PAD3
+
+// EN_33VA_N @ PA19: GPIO out
+#define EN_33VA_PIN                    PIN_PA19
+#define EN_33VA_ACTIVE                 0
+
+// E_CS @ PA24: GPIO out
+#define E_CS_PIN                       PIN_PA24
+#define E_CS_ACTIVE                    0
+
+// E_DC @ PA25: GPIO out
+#define E_DC_PIN                       PIN_PA25
+
+// E_RST @ PA27: GPIO out
+#define E_RST_PIN                      PIN_PA27
+#define E_RST_ACTIVE                   0
+
+// E_BUSY @ PA28: GPIO in
+#define E_BUSY_PIN                     PIN_PA28
 
 #endif /* CONF_BOARD_H_INCLUDED */

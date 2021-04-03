@@ -59,6 +59,9 @@
 // From module: Debug Print (FreeRTOS)
 #include <dbg_print.h>
 
+// From module: Delay routines
+#include <delay.h>
+
 // From module: FreeRTOS - kernel 10.0.0
 #include <FreeRTOS.h>
 #include <stack_macros.h>
@@ -93,11 +96,14 @@
 #include <sercom.h>
 #include <sercom_interrupt.h>
 
+// From module: SERCOM SPI - Serial Peripheral Interface (Polled APIs)
+#include <spi.h>
+
 // From module: SERCOM USART - Serial Communications (Callback APIs)
 #include <usart.h>
 #include <usart_interrupt.h>
 
-// From module: SYSTEM - Clock Management for SAMD20
+// From module: SYSTEM - Clock Management for SAMD21
 #include <clock.h>
 #include <gclk.h>
 

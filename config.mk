@@ -54,9 +54,11 @@ TARGET_SRAM = sennet-samd_sram.elf
 CSRCS = \
        common/services/freertos/dbg_print/dbg_print.c     \
        common/utils/interrupt/interrupt_sam_nvic.c        \
+       common2/services/delay/sam0/cycle_counter.c        \
        sam0/drivers/port/port.c                           \
        sam0/drivers/sercom/sercom.c                       \
        sam0/drivers/sercom/sercom_interrupt.c             \
+       sam0/drivers/sercom/spi/spi.c                      \
        sam0/drivers/sercom/usart/usart.c                  \
        sam0/drivers/sercom/usart/usart_interrupt.c        \
        sam0/drivers/system/clock/clock_samd21_r21_da_ha1/clock.c \
@@ -76,6 +78,19 @@ CSRCS = \
        thirdparty/freertos/freertos-10.0.0/Source/stream_buffer.c \
        thirdparty/freertos/freertos-10.0.0/Source/tasks.c \
        thirdparty/freertos/freertos-10.0.0/Source/timers.c \
+       EPD/Config/DEV_Config.c                             \
+       EPD/e-Paper/EPD_2in13.c                             \
+       EPD/EPD_2in13_test.c                                \
+       EPD/Fonts/font12.c                                  \
+       EPD/Fonts/font16.c                                  \
+       EPD/Fonts/font20.c                                  \
+       EPD/Fonts/font24.c                                  \
+       EPD/Fonts/font8.c                                   \
+       EPD/GUI/GUI_Paint.c                                 \
+       EPD/ImageData.c                                     \
+       hal_delay.c                                         \
+       hal_gpio.c                                          \
+       hal_spi.c                                           \
        main.c
 
 # List of assembler source files.
@@ -86,10 +101,13 @@ INC_PATH = \
        common/boards                                      \
        common/services/freertos/dbg_print                 \
        common/utils                                       \
+       common2/services/delay                             \
+       common2/services/delay/sam0                        \
        sam0/boards                                        \
        sam0/boards/dummy                                  \
        sam0/drivers/port                                  \
        sam0/drivers/sercom                                \
+       sam0/drivers/sercom/spi                            \
        sam0/drivers/sercom/usart                          \
        sam0/drivers/system                                \
        sam0/drivers/system/clock                          \
@@ -145,7 +163,7 @@ ARFLAGS =
 ASFLAGS = 
 
 # Extra flags to use when compiling.
-CFLAGS = -I.
+CFLAGS = -I. -IEPD
 
 # Extra flags to use when preprocessing.
 #
@@ -159,6 +177,8 @@ CFLAGS = -I.
 CPPFLAGS = \
        -D ARM_MATH_CM0PLUS=true                           \
        -D BOARD=DUMMY_BOARD                               \
+       -D CYCLE_MODE -D F_CPU=8000000                     \
+       -D SPI_CALLBACK_MODE=false                         \
        -D USART_CALLBACK_MODE=true                        \
        -D __FREERTOS__                                    \
        -D __SAMD21E18A__
