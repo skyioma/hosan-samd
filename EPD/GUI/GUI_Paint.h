@@ -172,7 +172,6 @@ typedef struct {
     UBYTE  Min;   //0 - 59
     UBYTE  Sec;   //0 - 59
 } PAINT_TIME;
-extern PAINT_TIME sPaint_time;
 
 //init and Clear
 void Paint_NewImage(UBYTE *image, UWORD Width, UWORD Height, UWORD Rotate, UWORD Color);
