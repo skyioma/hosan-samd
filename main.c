@@ -35,11 +35,18 @@
 #include "hal_gpio.h"
 #include "hal_spi.h"
 
+#include "EPD/EPD_Test.h"
+
 uint32_t main_counter;
 char main_string[] = "Main task iteration: 0x00000000\r\n";
 
 static void main_task(void *params)
 {
+  hal_gpio_set(EN_33VA_PIN, EN_33VA_ACTIVE);
+  hal_delay_ms(1);
+  EPD_2in13_test();
+  hal_gpio_set(EN_33VA_PIN, !EN_33VA_ACTIVE);
+
   do {
     dbg_print_str("Main task loop executing\r\n");
 

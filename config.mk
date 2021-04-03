@@ -78,6 +78,16 @@ CSRCS = \
        thirdparty/freertos/freertos-10.0.0/Source/stream_buffer.c \
        thirdparty/freertos/freertos-10.0.0/Source/tasks.c \
        thirdparty/freertos/freertos-10.0.0/Source/timers.c \
+       EPD/Config/DEV_Config.c                             \
+       EPD/e-Paper/EPD_2in13.c                             \
+       EPD/EPD_2in13_test.c                                \
+       EPD/Fonts/font12.c                                  \
+       EPD/Fonts/font16.c                                  \
+       EPD/Fonts/font20.c                                  \
+       EPD/Fonts/font24.c                                  \
+       EPD/Fonts/font8.c                                   \
+       EPD/GUI/GUI_Paint.c                                 \
+       EPD/ImageData.c                                     \
        hal_delay.c                                         \
        hal_gpio.c                                          \
        hal_spi.c                                           \
@@ -153,7 +163,7 @@ ARFLAGS =
 ASFLAGS = 
 
 # Extra flags to use when compiling.
-CFLAGS = -I.
+CFLAGS = -I. -IEPD
 
 # Extra flags to use when preprocessing.
 #
