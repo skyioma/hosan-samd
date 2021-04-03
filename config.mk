@@ -77,6 +77,7 @@ CSRCS = \
        thirdparty/freertos/freertos-10.0.0/Source/stream_buffer.c \
        thirdparty/freertos/freertos-10.0.0/Source/tasks.c \
        thirdparty/freertos/freertos-10.0.0/Source/timers.c \
+       hal_gpio.c                                          \
        hal_spi.c                                           \
        main.c
 

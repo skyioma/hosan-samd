@@ -32,6 +32,7 @@
 #include <asf.h>
 
 #include "hal_spi.h"
+#include "hal_gpio.h"
 
 uint32_t main_counter;
 char main_string[] = "Main task iteration: 0x00000000\r\n";
@@ -54,6 +55,7 @@ int main(void)
 {
   system_init();
   dbg_init();
+  hal_gpio_init();
   hal_spi_init();
 
   xTaskCreate(&main_task,
