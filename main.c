@@ -31,8 +31,11 @@
 
 #include <asf.h>
 
+#include <BSEC/bsec_iot_example.h>
+
 #include "hal_delay.h"
 #include "hal_gpio.h"
+#include "hal_i2c.h"
 #include "hal_spi.h"
 
 #include "EPD/EPD_Test.h"
@@ -65,11 +68,19 @@ int main(void)
   dbg_init();
   hal_delay_init();
   hal_gpio_init();
+  hal_i2c_init();
   hal_spi_init();
 
   xTaskCreate(&main_task,
     (const char *)"Main task",
     configMINIMAL_STACK_SIZE + 100,
+    NULL,
+    tskIDLE_PRIORITY + 2,
+    NULL);
+
+  xTaskCreate(&bsec_iot_task,
+    (const char *)"BSEC task",
+    configMINIMAL_STACK_SIZE + 1024,
     NULL,
     tskIDLE_PRIORITY + 2,
     NULL);

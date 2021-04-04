@@ -56,6 +56,7 @@ CSRCS = \
        common/utils/interrupt/interrupt_sam_nvic.c        \
        common2/services/delay/sam0/cycle_counter.c        \
        sam0/drivers/port/port.c                           \
+       sam0/drivers/sercom/i2c/i2c_sam0/i2c_master.c      \
        sam0/drivers/sercom/sercom.c                       \
        sam0/drivers/sercom/sercom_interrupt.c             \
        sam0/drivers/sercom/spi/spi.c                      \
@@ -78,6 +79,10 @@ CSRCS = \
        thirdparty/freertos/freertos-10.0.0/Source/stream_buffer.c \
        thirdparty/freertos/freertos-10.0.0/Source/tasks.c \
        thirdparty/freertos/freertos-10.0.0/Source/timers.c \
+       BSEC/bme680.c                                      \
+       BSEC/bsec_integration.c                            \
+       BSEC/bsec_iot_example.c                            \
+       BSEC/bsec_serialized_configurations_iaq.c          \
        EPD/Config/DEV_Config.c                             \
        EPD/e-Paper/EPD_2in13.c                             \
        EPD/EPD_2in13_test.c                                \
@@ -90,6 +95,7 @@ CSRCS = \
        EPD/ImageData.c                                     \
        hal_delay.c                                         \
        hal_gpio.c                                          \
+       hal_i2c.c                                           \
        hal_spi.c                                           \
        main.c
 
@@ -107,6 +113,8 @@ INC_PATH = \
        sam0/boards/dummy                                  \
        sam0/drivers/port                                  \
        sam0/drivers/sercom                                \
+       sam0/drivers/sercom/i2c                            \
+       sam0/drivers/sercom/i2c/i2c_sam0                   \
        sam0/drivers/sercom/spi                            \
        sam0/drivers/sercom/usart                          \
        sam0/drivers/system                                \
@@ -131,11 +139,13 @@ INC_PATH = \
 
 # Additional search paths for libraries.
 LIB_PATH =  \
-       thirdparty/CMSIS/Lib/GCC                          
+       thirdparty/CMSIS/Lib/GCC                           \
+       .
 
 # List of libraries to use during linking.
 LIBS =  \
-       arm_cortexM0l_math                                
+       arm_cortexM0l_math                                 \
+       algobsec
 
 # Path relative to top level directory pointing to a linker script.
 LINKER_SCRIPT_FLASH = sam0/utils/linker_scripts/samd21/gcc/samd21e18a_flash.ld
@@ -163,7 +173,7 @@ ARFLAGS =
 ASFLAGS = 
 
 # Extra flags to use when compiling.
-CFLAGS = -I. -IEPD
+CFLAGS = -I. -IEPD -IBSEC -DBME680_FLOAT_POINT_COMPENSATION
 
 # Extra flags to use when preprocessing.
 #
@@ -178,6 +188,7 @@ CPPFLAGS = \
        -D ARM_MATH_CM0PLUS=true                           \
        -D BOARD=DUMMY_BOARD                               \
        -D CYCLE_MODE -D F_CPU=8000000                     \
+       -D I2C_MASTER_CALLBACK_MODE=false                  \
        -D SPI_CALLBACK_MODE=false                         \
        -D USART_CALLBACK_MODE=true                        \
        -D __FREERTOS__                                    \
@@ -185,6 +196,7 @@ CPPFLAGS = \
 
 # Extra flags to use when linking
 LDFLAGS = \
+       -lc -u _printf_float -LBSEC
 
 # Pre- and post-build commands
 PREBUILD_CMD = 
