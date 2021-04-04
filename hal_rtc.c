@@ -56,3 +56,36 @@ void hal_rtc_init()
   rtc_count_init(&rtc_instance, RTC, &config_rtc_count);
   rtc_count_register_callback(&rtc_instance, rtc_callback, RTC_COUNT_CALLBACK_COMPARE_0);
 }
+
+void vApplicationSleep(uint32_t rtos_ticks)
+{
+  SysTick->CTRL = SysTick->CTRL & ~SysTick_CTRL_ENABLE_Msk;
+
+  if (rtos_ticks > 10) {
+    rtc_count_set_count(&rtc_instance, 0);
+    rtc_count_set_compare(&rtc_instance, rtos_ticks - 3, RTC_COUNT_COMPARE_0);
+
+    rtc_count_enable(&rtc_instance);
+    rtc_count_enable_callback(&rtc_instance, RTC_COUNT_CALLBACK_COMPARE_0);
+
+    system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
+    system_sleep();
+
+    rtc_count_disable_callback(&rtc_instance, RTC_COUNT_CALLBACK_COMPARE_0);
+    rtc_count_disable(&rtc_instance);
+
+    const uint32_t slept_ticks = rtc_count_get_count(&rtc_instance);
+
+    if (slept_ticks <= rtos_ticks) {
+      vTaskStepTick(slept_ticks);
+    } else {
+      // NOTE Fake it!
+      vTaskStepTick(rtos_ticks);
+    }
+  } else {
+    delay_ms(rtos_ticks);
+    vTaskStepTick(rtos_ticks);
+  }
+
+  SysTick->CTRL = SysTick->CTRL | SysTick_CTRL_ENABLE_Msk;
+}

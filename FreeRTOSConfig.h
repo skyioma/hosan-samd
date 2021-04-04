@@ -109,4 +109,9 @@ standard names - or at least those used in the unmodified vector table. */
 #define xPortPendSVHandler                      PendSV_Handler
 #define xPortSysTickHandler                     SysTick_Handler
 
+#define configUSE_TICKLESS_IDLE                 1
+
+void vApplicationSleep(uint32_t rtos_ticks);
+#define portSUPPRESS_TICKS_AND_SLEEP( xIdleTime ) vApplicationSleep( xIdleTime )
+
 #endif /* FREERTOS_CONFIG_H */
