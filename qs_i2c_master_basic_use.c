@@ -35,7 +35,7 @@
 
 #define DATA_LENGTH 10
 static uint8_t write_buffer[DATA_LENGTH] = {
-		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
+    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
 };
 
 static uint8_t read_buffer[DATA_LENGTH];
@@ -52,64 +52,64 @@ void configure_i2c_master(void);
 
 void configure_i2c_master(void)
 {
-	/* Initialize config structure and software module. */
-	struct i2c_master_config config_i2c_master;
-	i2c_master_get_config_defaults(&config_i2c_master);
+  /* Initialize config structure and software module. */
+  struct i2c_master_config config_i2c_master;
+  i2c_master_get_config_defaults(&config_i2c_master);
 
-	/* Change buffer timeout to something longer. */
-	config_i2c_master.buffer_timeout = 10000;
+  /* Change buffer timeout to something longer. */
+  config_i2c_master.buffer_timeout = 10000;
 #if SAMR30
-	config_i2c_master.pinmux_pad0    = CONF_MASTER_SDA_PINMUX;
-	config_i2c_master.pinmux_pad1    = CONF_MASTER_SCK_PINMUX;
+  config_i2c_master.pinmux_pad0    = CONF_MASTER_SDA_PINMUX;
+  config_i2c_master.pinmux_pad1    = CONF_MASTER_SCK_PINMUX;
 #endif
-	/* Initialize and enable device with config. */
-	i2c_master_init(&i2c_master_instance, CONF_I2C_MASTER_MODULE, &config_i2c_master);
+  /* Initialize and enable device with config. */
+  i2c_master_init(&i2c_master_instance, CONF_I2C_MASTER_MODULE, &config_i2c_master);
 
-	i2c_master_enable(&i2c_master_instance);
+  i2c_master_enable(&i2c_master_instance);
 }
 
 int main(void)
 {
-	system_init();
+  system_init();
 
-	/* Configure device and enable. */
-	configure_i2c_master();
+  /* Configure device and enable. */
+  configure_i2c_master();
 
-	/* Timeout counter. */
-	uint16_t timeout = 0;
+  /* Timeout counter. */
+  uint16_t timeout = 0;
 
-	/* Init i2c packet. */
-	struct i2c_master_packet packet = {
-		.address     = SLAVE_ADDRESS,
-		.data_length = DATA_LENGTH,
-		.data        = write_buffer,
-		.ten_bit_address = false,
-		.high_speed      = false,
-		.hs_master_code  = 0x0,
-	};
+  /* Init i2c packet. */
+  struct i2c_master_packet packet = {
+    .address     = SLAVE_ADDRESS,
+    .data_length = DATA_LENGTH,
+    .data        = write_buffer,
+    .ten_bit_address = false,
+    .high_speed      = false,
+    .hs_master_code  = 0x0,
+  };
 
-	/* Write buffer to slave until success. */
-	while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) !=
-			STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ == TIMEOUT) {
-			break;
-		}
-	}
+  /* Write buffer to slave until success. */
+  while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) !=
+      STATUS_OK) {
+    /* Increment timeout counter and check if timed out. */
+    if (timeout++ == TIMEOUT) {
+      break;
+    }
+  }
 
-	/* Read from slave until success. */
-	packet.data = read_buffer;
-	while (i2c_master_read_packet_wait(&i2c_master_instance, &packet) !=
-			STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ == TIMEOUT) {
-			break;
-		}
-	}
+  /* Read from slave until success. */
+  packet.data = read_buffer;
+  while (i2c_master_read_packet_wait(&i2c_master_instance, &packet) !=
+      STATUS_OK) {
+    /* Increment timeout counter and check if timed out. */
+    if (timeout++ == TIMEOUT) {
+      break;
+    }
+  }
 
 
-	while (true) {
-		/* Infinite loop */
-	}
+  while (true) {
+    /* Infinite loop */
+  }
 
 }
