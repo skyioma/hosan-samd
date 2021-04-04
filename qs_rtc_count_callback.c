@@ -43,47 +43,46 @@ struct rtc_module rtc_instance;
 
 void rtc_overflow_callback(void)
 {
-	/* Do something on RTC overflow here */
-	port_pin_toggle_output_level(LED_0_PIN);
+  /* Do something on RTC overflow here */
+  port_pin_toggle_output_level(LED_0_PIN);
 }
 
 void configure_rtc_count(void)
 {
-	struct rtc_count_config config_rtc_count;
-	rtc_count_get_config_defaults(&config_rtc_count);
+  struct rtc_count_config config_rtc_count;
+  rtc_count_get_config_defaults(&config_rtc_count);
 
-	config_rtc_count.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
-	config_rtc_count.mode                = RTC_COUNT_MODE_16BIT;
+  config_rtc_count.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
+  config_rtc_count.mode                = RTC_COUNT_MODE_16BIT;
 #ifdef FEATURE_RTC_CONTINUOUSLY_UPDATED
-	config_rtc_count.continuously_update = true;
+  config_rtc_count.continuously_update = true;
 #endif
-	rtc_count_init(&rtc_instance, RTC, &config_rtc_count);
+  rtc_count_init(&rtc_instance, RTC, &config_rtc_count);
 
-	rtc_count_enable(&rtc_instance);
+  rtc_count_enable(&rtc_instance);
 }
 
 void configure_rtc_callbacks(void)
 {
-	rtc_count_register_callback(
-			&rtc_instance, rtc_overflow_callback, RTC_COUNT_CALLBACK_OVERFLOW);
-	rtc_count_enable_callback(&rtc_instance, RTC_COUNT_CALLBACK_OVERFLOW);
+  rtc_count_register_callback(&rtc_instance, rtc_overflow_callback, RTC_COUNT_CALLBACK_OVERFLOW);
+  rtc_count_enable_callback(&rtc_instance, RTC_COUNT_CALLBACK_OVERFLOW);
 }
 
 int main(void)
 {
-	/* Initialize system. Must configure conf_clocks.h first. */
-	system_init();
+  /* Initialize system. Must configure conf_clocks.h first. */
+  system_init();
 
-	/* Configure and enable RTC */
-	configure_rtc_count();
+  /* Configure and enable RTC */
+  configure_rtc_count();
 
-	/* Configure and enable callback */
-	configure_rtc_callbacks();
+  /* Configure and enable callback */
+  configure_rtc_callbacks();
 
-	/* Set period */
-	rtc_count_set_period(&rtc_instance, 2000);
+  /* Set period */
+  rtc_count_set_period(&rtc_instance, 2000);
 
-	while (true) {
-		/* Infinite while loop */
-	}
+  while (true) {
+    /* Infinite while loop */
+  }
 }
