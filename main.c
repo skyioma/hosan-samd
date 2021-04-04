@@ -33,6 +33,7 @@
 
 #include "hal_delay.h"
 #include "hal_gpio.h"
+#include "hal_i2c.h"
 #include "hal_spi.h"
 
 #include "EPD/EPD_Test.h"
@@ -65,6 +66,7 @@ int main(void)
   dbg_init();
   hal_delay_init();
   hal_gpio_init();
+  hal_i2c_init();
   hal_spi_init();
 
   xTaskCreate(&main_task,
