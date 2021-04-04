@@ -76,6 +76,7 @@
 /**********************************************************************************************************************/
 
 #include "bsec_integration.h"
+#include "bsec_iot_example.h"
 #include "bsec_serialized_configurations_iaq.h"
 
 #include <asf.h>
@@ -228,7 +229,7 @@ uint32_t config_load(uint8_t *config_buffer, uint32_t n_buffer)
  *
  * @return      result of the processing
  */
-int main()
+int bsec_iot_main()
 {
     return_values_init ret;
     
@@ -251,6 +252,16 @@ int main()
     bsec_iot_loop(sleep, get_timestamp_us, output_ready, state_save, 10000);
     
     return 0;
+}
+
+void bsec_iot_task(void *params)
+{
+    (void)bsec_iot_main();
+    dbg_print_str("bsec_iot_main finished!\r\n");
+
+    while (1) {}
+
+    (void)params;
 }
 
 /*! @}*/

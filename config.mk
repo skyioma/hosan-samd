@@ -79,6 +79,10 @@ CSRCS = \
        thirdparty/freertos/freertos-10.0.0/Source/stream_buffer.c \
        thirdparty/freertos/freertos-10.0.0/Source/tasks.c \
        thirdparty/freertos/freertos-10.0.0/Source/timers.c \
+       BSEC/bme680.c                                      \
+       BSEC/bsec_integration.c                            \
+       BSEC/bsec_iot_example.c                            \
+       BSEC/bsec_serialized_configurations_iaq.c          \
        EPD/Config/DEV_Config.c                             \
        EPD/e-Paper/EPD_2in13.c                             \
        EPD/EPD_2in13_test.c                                \
@@ -135,11 +139,13 @@ INC_PATH = \
 
 # Additional search paths for libraries.
 LIB_PATH =  \
-       thirdparty/CMSIS/Lib/GCC                          
+       thirdparty/CMSIS/Lib/GCC                           \
+       .
 
 # List of libraries to use during linking.
 LIBS =  \
-       arm_cortexM0l_math                                
+       arm_cortexM0l_math                                 \
+       algobsec
 
 # Path relative to top level directory pointing to a linker script.
 LINKER_SCRIPT_FLASH = sam0/utils/linker_scripts/samd21/gcc/samd21e18a_flash.ld
@@ -167,7 +173,7 @@ ARFLAGS =
 ASFLAGS = 
 
 # Extra flags to use when compiling.
-CFLAGS = -I. -IEPD
+CFLAGS = -I. -IEPD -IBSEC -DBME680_FLOAT_POINT_COMPENSATION
 
 # Extra flags to use when preprocessing.
 #
@@ -190,6 +196,7 @@ CPPFLAGS = \
 
 # Extra flags to use when linking
 LDFLAGS = \
+       -lc -u _printf_float -LBSEC
 
 # Pre- and post-build commands
 PREBUILD_CMD = 
