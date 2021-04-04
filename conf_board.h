@@ -54,6 +54,14 @@
 #define SPI_PINMUX_PAD2                PINMUX_PA10C_SERCOM0_PAD2
 #define SPI_PINMUX_PAD3                PINMUX_PA11C_SERCOM0_PAD3
 
+// NRF_IRQ @ PA09
+// NRF_CSN @ PA14
+#define NRF_CS_PIN                     PIN_PA14
+
+// NRF_CE @ PA15
+#define NRF_CE_PIN                     PIN_PA15
+#define NRF_CE_ACTIVE                  1
+
 // EN_33VA_N @ PA19: GPIO out
 #define EN_33VA_PIN                    PIN_PA19
 #define EN_33VA_ACTIVE                 0
