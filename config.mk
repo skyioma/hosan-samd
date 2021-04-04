@@ -56,6 +56,8 @@ CSRCS = \
        common/utils/interrupt/interrupt_sam_nvic.c        \
        common2/services/delay/sam0/cycle_counter.c        \
        sam0/drivers/port/port.c                           \
+       sam0/drivers/rtc/rtc_sam_d_r_h/rtc_count.c         \
+       sam0/drivers/rtc/rtc_sam_d_r_h/rtc_count_interrupt.c \
        sam0/drivers/sercom/i2c/i2c_sam0/i2c_master.c      \
        sam0/drivers/sercom/sercom.c                       \
        sam0/drivers/sercom/sercom_interrupt.c             \
@@ -112,6 +114,8 @@ INC_PATH = \
        sam0/boards                                        \
        sam0/boards/dummy                                  \
        sam0/drivers/port                                  \
+       sam0/drivers/rtc                                   \
+       sam0/drivers/rtc/rtc_sam_d_r_h                     \
        sam0/drivers/sercom                                \
        sam0/drivers/sercom/i2c                            \
        sam0/drivers/sercom/i2c/i2c_sam0                   \
@@ -189,6 +193,7 @@ CPPFLAGS = \
        -D BOARD=DUMMY_BOARD                               \
        -D CYCLE_MODE -D F_CPU=8000000                     \
        -D I2C_MASTER_CALLBACK_MODE=false                  \
+       -D RTC_COUNT_ASYNC=true                            \
        -D SPI_CALLBACK_MODE=false                         \
        -D USART_CALLBACK_MODE=true                        \
        -D __FREERTOS__                                    \
