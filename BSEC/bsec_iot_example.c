@@ -76,6 +76,11 @@
 /**********************************************************************************************************************/
 
 #include "bsec_integration.h"
+#include "bsec_serialized_configurations_iaq.h"
+
+#include <asf.h>
+#include <hal_i2c.h>
+#include <string.h>
 
 /**********************************************************************************************************************/
 /* functions */
@@ -93,10 +98,7 @@
  */
 int8_t bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data_ptr, uint16_t data_len)
 {
-    // ...
-    // Please insert system specific function to write to the bus where BME680 is connected
-    // ...
-    return 0;
+    return hal_i2c_write(dev_addr, reg_addr, reg_data_ptr, data_len);
 }
 
 /*!
@@ -111,10 +113,7 @@ int8_t bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data_ptr, uint
  */
 int8_t bus_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data_ptr, uint16_t data_len)
 {
-    // ...
-    // Please insert system specific function to read from bus where BME680 is connected
-    // ...
-    return 0;
+    return hal_i2c_read(dev_addr, reg_addr, reg_data_ptr, data_len);
 }
 
 /*!
@@ -126,9 +125,7 @@ int8_t bus_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data_ptr, uint1
  */
 void sleep(uint32_t t_ms)
 {
-    // ...
-    // Please insert system specific function sleep or delay for t_ms milliseconds
-    // ...
+    vTaskDelay(pdMS_TO_TICKS(t_ms));
 }
 
 /*!
@@ -138,11 +135,7 @@ void sleep(uint32_t t_ms)
  */
 int64_t get_timestamp_us()
 {
-    int64_t system_current_time = 0;
-    // ...
-    // Please insert system specific function to retrieve a timestamp (in microseconds)
-    // ...
-    return system_current_time;
+    return (int64_t)xTaskGetTickCount() * 1000;
 }
 
 /*!
@@ -165,9 +158,15 @@ void output_ready(int64_t timestamp, float iaq, uint8_t iaq_accuracy, float temp
      float pressure, float raw_temperature, float raw_humidity, float gas, bsec_library_return_t bsec_status,
      float static_iaq, float co2_equivalent, float breath_voc_equivalent)
 {
-    // ...
-    // Please insert system specific code to further process or display the BSEC outputs
-    // ...
+    char buf[256];
+
+    sprintf(buf,
+            "[%d]: IAQ*/st %.3f[%u]/%.3f T*/P/H* %.1f[%.1f]/%.1f/%.1f[%.1f]"
+            " GAS %.3f CO2 %.3f VOC %.3f\r\n",
+            bsec_status, iaq, iaq_accuracy, static_iaq, temperature,
+            raw_temperature, pressure, humidity, raw_humidity, gas,
+            co2_equivalent, breath_voc_equivalent);
+    dbg_print_str(buf);
 }
 
 /*!
@@ -214,13 +213,13 @@ void state_save(const uint8_t *state_buffer, uint32_t length)
  */
 uint32_t config_load(uint8_t *config_buffer, uint32_t n_buffer)
 {
-    // ...
-    // Load a library config from non-volatile memory, if available.
-    //
-    // Return zero if loading was unsuccessful or no config was available, 
-    // otherwise return length of loaded config string.
-    // ...
-    return 0;
+    const uint32_t bsec_config_size = sizeof(bsec_config_iaq);
+
+    if (n_buffer < bsec_config_size)
+        return 0;
+
+    memcpy(config_buffer, bsec_config_iaq, bsec_config_size);
+    return bsec_config_size;
 }
 
 /*!
