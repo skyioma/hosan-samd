@@ -97,7 +97,7 @@ extern "C"
 typedef void (*sleep_fct)(uint32_t t_ms);
 
 /* function pointer to the system specific timestamp derivation function */
-typedef int64_t (*get_timestamp_us_fct)();
+typedef int64_t (*get_timestamp_us_fct)(void);
 
 /* function pointer to the function processing obtained BSEC outputs */
 typedef void (*output_ready_fct)(int64_t timestamp, float iaq, uint8_t iaq_accuracy, float temperature, float humidity,

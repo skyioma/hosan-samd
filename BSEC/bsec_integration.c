@@ -160,7 +160,6 @@ return_values_init bsec_iot_init(float sample_rate, float temperature_offset, bm
                     bme680_com_fptr_t bus_read, sleep_fct sleep, state_load_fct state_load, config_load_fct config_load)
 {
     return_values_init ret = {BME680_OK, BSEC_OK};
-    bsec_library_return_t bsec_status = BSEC_OK;
     
     uint8_t bsec_state[BSEC_MAX_STATE_BLOB_SIZE] = {0};
     uint8_t bsec_config[BSEC_MAX_PROPERTY_BLOB_SIZE] = {0};
@@ -280,6 +279,8 @@ static void bme680_bsec_trigger_measurement(bsec_bme_settings_t *sensor_settings
         sleep(5);
         bme680_status = bme680_get_sensor_mode(&bme680_g);
     }
+
+    (void)bme680_status;
 }
 
 /*!
@@ -362,6 +363,8 @@ static void bme680_bsec_read_data(int64_t time_stamp_trigger, bsec_input_t *inpu
             }
         }
     }
+
+    (void)bme680_status;
 }
 
 /*!
@@ -475,6 +478,14 @@ static void bme680_bsec_process_data(bsec_input_t *bsec_inputs, uint8_t num_bsec
         output_ready(timestamp, iaq, iaq_accuracy, temp, humidity, raw_pressure, raw_temp, 
             raw_humidity, raw_gas, bsec_status, static_iaq, co2_equivalent, breath_voc_equivalent);
     }
+
+    (void)static_iaq_accuracy;
+    (void)co2_accuracy;
+    (void)breath_voc_accuracy;
+    (void)comp_gas_value;
+    (void)comp_gas_accuracy;
+    (void)gas_percentage;
+    (void)gas_percentage_acccuracy;
 }
 
 /*!

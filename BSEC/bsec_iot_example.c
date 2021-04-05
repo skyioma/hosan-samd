@@ -98,7 +98,7 @@
  *
  * @return          result of the bus communication function
  */
-int8_t bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data_ptr, uint16_t data_len)
+static int8_t bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data_ptr, uint16_t data_len)
 {
     return hal_i2c_write(dev_addr, reg_addr, reg_data_ptr, data_len);
 }
@@ -113,7 +113,7 @@ int8_t bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data_ptr, uint
  *
  * @return          result of the bus communication function
  */
-int8_t bus_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data_ptr, uint16_t data_len)
+static int8_t bus_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data_ptr, uint16_t data_len)
 {
     return hal_i2c_read(dev_addr, reg_addr, reg_data_ptr, data_len);
 }
@@ -125,7 +125,7 @@ int8_t bus_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data_ptr, uint1
  *
  * @return          none
  */
-void sleep(uint32_t t_ms)
+static void sleep(uint32_t t_ms)
 {
     vTaskDelay(pdMS_TO_TICKS(t_ms));
 }
@@ -135,7 +135,7 @@ void sleep(uint32_t t_ms)
  *
  * @return          system_current_time    current system timestamp in microseconds
  */
-int64_t get_timestamp_us()
+static int64_t get_timestamp_us(void)
 {
     return (int64_t)xTaskGetTickCount() * 1000;
 }
@@ -156,7 +156,7 @@ int64_t get_timestamp_us()
  *
  * @return          none
  */
-void output_ready(int64_t timestamp, float iaq, uint8_t iaq_accuracy, float temperature, float humidity,
+static void output_ready(int64_t timestamp, float iaq, uint8_t iaq_accuracy, float temperature, float humidity,
      float pressure, float raw_temperature, float raw_humidity, float gas, bsec_library_return_t bsec_status,
      float static_iaq, float co2_equivalent, float breath_voc_equivalent)
 {
@@ -181,7 +181,7 @@ void output_ready(int64_t timestamp, float iaq, uint8_t iaq_accuracy, float temp
  *
  * @return          number of bytes copied to state_buffer
  */
-uint32_t state_load(uint8_t *state_buffer, uint32_t n_buffer)
+static uint32_t state_load(uint8_t *state_buffer, uint32_t n_buffer)
 {
     // ...
     // Load a previous library state from non-volatile memory, if available.
@@ -200,7 +200,7 @@ uint32_t state_load(uint8_t *state_buffer, uint32_t n_buffer)
  *
  * @return          none
  */
-void state_save(const uint8_t *state_buffer, uint32_t length)
+static void state_save(const uint8_t *state_buffer, uint32_t length)
 {
     // ...
     // Save the string some form of non-volatile memory, if possible.
@@ -215,7 +215,7 @@ void state_save(const uint8_t *state_buffer, uint32_t length)
  *
  * @return          number of bytes copied to config_buffer
  */
-uint32_t config_load(uint8_t *config_buffer, uint32_t n_buffer)
+static uint32_t config_load(uint8_t *config_buffer, uint32_t n_buffer)
 {
     const uint32_t bsec_config_size = sizeof(bsec_config_iaq);
 
@@ -232,7 +232,7 @@ uint32_t config_load(uint8_t *config_buffer, uint32_t n_buffer)
  *
  * @return      result of the processing
  */
-int bsec_iot_main()
+static int bsec_iot_main(void)
 {
     return_values_init ret;
     
