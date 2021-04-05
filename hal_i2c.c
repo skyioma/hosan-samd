@@ -41,7 +41,7 @@
 /* Number of times to try to send packet if failed. */
 #define TIMEOUT 1000
 
-struct i2c_master_module i2c_master_instance;
+static struct i2c_master_module i2c_master_instance;
 
 void hal_i2c_init()
 {
