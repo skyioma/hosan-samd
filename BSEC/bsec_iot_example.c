@@ -81,6 +81,7 @@
 
 #include <asf.h>
 #include <hal_i2c.h>
+#include <radio.h>
 #include <string.h>
 
 /**********************************************************************************************************************/
@@ -168,6 +169,8 @@ void output_ready(int64_t timestamp, float iaq, uint8_t iaq_accuracy, float temp
             raw_temperature, pressure, humidity, raw_humidity, gas,
             co2_equivalent, breath_voc_equivalent);
     dbg_print_str(buf);
+
+    radio_send_bme680_data(bsec_status, iaq, iaq_accuracy, static_iaq, temperature, pressure, humidity);
 }
 
 /*!
