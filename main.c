@@ -48,17 +48,23 @@ char main_string[] = "Main task iteration: 0x00000000\r\n";
 
 static void main_task(void *params)
 {
+#if 0
   hal_gpio_set(EN_33VA_PIN, EN_33VA_ACTIVE);
   hal_delay_ms(1);
   EPD_2in13_test();
   hal_gpio_set(EN_33VA_PIN, !EN_33VA_ACTIVE);
+#endif
 
   do {
+#if 0
     dbg_print_str("Main task loop executing\r\n");
 
     // Update hexadecimal 32-bit integer in string, and print it
     dbg_sprint_hexint(&main_string[23], main_counter++);
     dbg_print_str(main_string);
+#else
+    dbg_print_char('.');
+#endif
 
     vTaskDelay(1000 / portTICK_RATE_MS);
   } while(1);
