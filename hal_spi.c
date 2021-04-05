@@ -59,6 +59,7 @@ void hal_spi_write_byte(uint8_t byte)
 
 int8_t hal_spi_transceive_data(const uint8_t *write_buf, uint8_t *read_buf, uint8_t size)
 {
-  (void)spi_transceive_buffer_wait(&spi_master_instance, write_buf, read_buf, size);
+  // NOTE Indeed write_buf (tx_data) is const by implementation!
+  (void)spi_transceive_buffer_wait(&spi_master_instance, (uint8_t *)write_buf, read_buf, size);
   return 0;
 }
