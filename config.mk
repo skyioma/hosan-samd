@@ -85,23 +85,23 @@ CSRCS = \
        BSEC/bsec_integration.c                            \
        BSEC/bsec_iot_example.c                            \
        BSEC/bsec_serialized_configurations_iaq.c          \
-       EPD/Config/DEV_Config.c                             \
-       EPD/e-Paper/EPD_2in13.c                             \
-       EPD/EPD_2in13_test.c                                \
-       EPD/Fonts/font12.c                                  \
-       EPD/Fonts/font16.c                                  \
-       EPD/Fonts/font20.c                                  \
-       EPD/Fonts/font24.c                                  \
-       EPD/Fonts/font8.c                                   \
-       EPD/GUI/GUI_Paint.c                                 \
-       EPD/ImageData.c                                     \
-       drv_nrf24l01p.c                                     \
-       hal_delay.c                                         \
-       hal_gpio.c                                          \
-       hal_i2c.c                                           \
-       hal_rtc.c                                           \
-       hal_spi.c                                           \
-       main.c                                              \
+       EPD/Config/DEV_Config.c                            \
+       EPD/e-Paper/EPD_2in13.c                            \
+       EPD/EPD_2in13_test.c                               \
+       EPD/Fonts/font12.c                                 \
+       EPD/Fonts/font16.c                                 \
+       EPD/Fonts/font20.c                                 \
+       EPD/Fonts/font24.c                                 \
+       EPD/Fonts/font8.c                                  \
+       EPD/GUI/GUI_Paint.c                                \
+       EPD/ImageData.c                                    \
+       drv_nrf24l01p.c                                    \
+       hal_delay.c                                        \
+       hal_gpio.c                                         \
+       hal_i2c.c                                          \
+       hal_rtc.c                                          \
+       hal_spi.c                                          \
+       main.c                                             \
        radio.c
 
 # List of assembler source files.
@@ -180,7 +180,7 @@ ARFLAGS =
 ASFLAGS = 
 
 # Extra flags to use when compiling.
-CFLAGS = -I. -IEPD -IBSEC -DBME680_FLOAT_POINT_COMPENSATION
+CFLAGS = -I. -IEPD -IBSEC
 
 # Extra flags to use when preprocessing.
 #
@@ -193,6 +193,7 @@ CFLAGS = -I. -IEPD -IBSEC -DBME680_FLOAT_POINT_COMPENSATION
 #   EXT_BOARD  Optional extension board in use, see boards/board.h for a list.
 CPPFLAGS = \
        -D ARM_MATH_CM0PLUS=true                           \
+       -D BME680_FLOAT_POINT_COMPENSATION                 \
        -D BOARD=DUMMY_BOARD                               \
        -D CYCLE_MODE -D F_CPU=8000000                     \
        -D I2C_MASTER_CALLBACK_MODE=false                  \
