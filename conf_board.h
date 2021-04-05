@@ -57,6 +57,7 @@
 // NRF_IRQ @ PA09
 // NRF_CSN @ PA14
 #define NRF_CS_PIN                     PIN_PA14
+#define NRF_CS_ACTIVE                  0
 
 // NRF_CE @ PA15
 #define NRF_CE_PIN                     PIN_PA15

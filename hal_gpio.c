@@ -18,6 +18,9 @@ void hal_gpio_init()
   port_pin_set_output_level(EN_33VA_PIN, !EN_33VA_ACTIVE);
   port_pin_set_config(EN_33VA_PIN, &pin_conf);
 
+  port_pin_set_output_level(NRF_CS_PIN, !NRF_CS_ACTIVE);
+  port_pin_set_config(NRF_CS_PIN, &pin_conf);
+
   pin_conf.direction = PORT_PIN_DIR_INPUT;
   port_pin_set_config(E_BUSY_PIN, &pin_conf);
 }
