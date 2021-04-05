@@ -30,9 +30,7 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="https://www.microchip.com/support/">Microchip Support</a>
- */
+
 #include <clock.h>
 
 #ifndef CONF_CLOCKS_H_INCLUDED

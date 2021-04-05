@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM SERCOM I2C Master Quick Start Guide
+ * \brief SAM D21 SERCOM I2C Master
  *
  * Copyright (c) 2012-2018 Microchip Technology Inc. and its subsidiaries.
  *
@@ -41,7 +41,6 @@
 /* Number of times to try to send packet if failed. */
 #define TIMEOUT 1000
 
-/* Init software module. */
 struct i2c_master_module i2c_master_instance;
 
 void hal_i2c_init()
@@ -51,14 +50,11 @@ void hal_i2c_init()
 
   i2c_master_get_config_defaults(&config_i2c_master);
 
-  /* Change buffer timeout to something longer. */
   config_i2c_master.buffer_timeout = 10000;
   config_i2c_master.pinmux_pad0 = I2C_SERCOM_PINMUX_PAD0;
   config_i2c_master.pinmux_pad1 = I2C_SERCOM_PINMUX_PAD1;
 
-  /* Initialize and enable device with config. */
   i2c_master_init(&i2c_master_instance, I2C_MODULE, &config_i2c_master);
-
   i2c_master_enable(&i2c_master_instance);
 }
 
@@ -87,7 +83,6 @@ int8_t hal_i2c_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data_ptr, 
   uint16_t timeout = 0;
 
   while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) != STATUS_OK) {
-    /* Increment timeout counter and check if timed out. */
     if (timeout++ == TIMEOUT) {
       break;
     }
@@ -110,11 +105,9 @@ int8_t hal_i2c_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data_ptr, u
     .hs_master_code = 0x0,
   };
 
-  /* Timeout counter. */
   uint16_t timeout = 0;
 
   while (i2c_master_read_packet_wait(&i2c_master_instance, &packet) != STATUS_OK) {
-    /* Increment timeout counter and check if timed out. */
     if (timeout++ == TIMEOUT) {
       break;
     }

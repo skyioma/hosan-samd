@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM RTC Count Callback
+ * \brief SAM D21 RTC Count (Callback)
  *
  * Copyright (c) 2013-2018 Microchip Technology Inc. and its subsidiaries.
  *
