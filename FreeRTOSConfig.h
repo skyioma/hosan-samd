@@ -47,7 +47,7 @@ void assert_triggered( const char * file, uint32_t line );
 #define configUSE_IDLE_HOOK                     0
 #define configUSE_TICK_HOOK                     0
 #define configPRIO_BITS                         2
-#define configCPU_CLOCK_HZ                      ( 8000000 )
+#define configCPU_CLOCK_HZ                      ( F_CPU )
 #define configTICK_RATE_HZ                      ( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES                    ( 5 )
 #define configMINIMAL_STACK_SIZE                ( ( unsigned short ) 100 )
@@ -107,8 +107,5 @@ standard names - or at least those used in the unmodified vector table. */
 #define xPortSysTickHandler                     SysTick_Handler
 
 #define configUSE_TICKLESS_IDLE                 1
-
-void vApplicationSleep(uint32_t rtos_ticks);
-#define portSUPPRESS_TICKS_AND_SLEEP( xIdleTime ) vApplicationSleep( xIdleTime )
 
 #endif /* FREERTOS_CONFIG_H */
