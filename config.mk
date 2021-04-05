@@ -95,6 +95,7 @@ CSRCS = \
        EPD/Fonts/font8.c                                   \
        EPD/GUI/GUI_Paint.c                                 \
        EPD/ImageData.c                                     \
+       drv_nrf24l01p.c                                     \
        hal_delay.c                                         \
        hal_gpio.c                                          \
        hal_i2c.c                                           \

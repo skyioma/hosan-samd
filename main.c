@@ -33,6 +33,8 @@
 
 #include <BSEC/bsec_iot_example.h>
 
+#include "drv_nrf24l01p.h"
+
 #include "hal_delay.h"
 #include "hal_gpio.h"
 #include "hal_i2c.h"
@@ -72,6 +74,8 @@ int main(void)
   hal_i2c_init();
   hal_rtc_init();
   hal_spi_init();
+
+  drv_nrf24_init();
 
   xTaskCreate(&main_task,
     (const char *)"Main task",
