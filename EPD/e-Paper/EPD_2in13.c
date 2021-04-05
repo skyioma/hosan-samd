@@ -109,7 +109,7 @@ static void EPD_2IN13_SendData(UBYTE Data)
 function :	Wait until the busy_pin goes LOW
 parameter:
 ******************************************************************************/
-void EPD_2IN13_ReadBusy(void)
+static void EPD_2IN13_ReadBusy(void)
 {
     Debug("e-Paper busy\r\n");
     while(DEV_Digital_Read(EPD_BUSY_PIN) == 1) {      //LOW: idle, HIGH: busy
