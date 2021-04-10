@@ -55,6 +55,7 @@ CSRCS = \
        common/services/freertos/dbg_print/dbg_print.c     \
        common/utils/interrupt/interrupt_sam_nvic.c        \
        common2/services/delay/sam0/cycle_counter.c        \
+       sam0/drivers/adc/adc_sam_d_r_h/adc.c               \
        sam0/drivers/extint/extint_callback.c              \
        sam0/drivers/extint/extint_sam_d_r_h/extint.c      \
        sam0/drivers/nvm/nvm.c                             \
@@ -123,6 +124,8 @@ INC_PATH = \
        common2/services/delay/sam0                        \
        sam0/boards                                        \
        sam0/boards/dummy                                  \
+       sam0/drivers/adc                                   \
+       sam0/drivers/adc/adc_sam_d_r_h                     \
        sam0/drivers/extint                                \
        sam0/drivers/extint/extint_sam_d_r_h               \
        sam0/drivers/nvm                                   \
@@ -202,6 +205,7 @@ CFLAGS = -I. -IEPD -IBSEC
 #   BOARD      Target board in use, see boards/board.h for a list.
 #   EXT_BOARD  Optional extension board in use, see boards/board.h for a list.
 CPPFLAGS = \
+       -D ADC_CALLBACK_MODE=false                         \
        -D ARM_MATH_CM0PLUS=true                           \
        -D BME680_FLOAT_POINT_COMPENSATION                 \
        -D BOARD=DUMMY_BOARD                               \
