@@ -108,7 +108,8 @@ CSRCS = \
        hal_rtc.c                                          \
        hal_spi.c                                          \
        main.c                                             \
-       radio.c
+       radio.c                                            \
+       views.c
 
 # List of assembler source files.
 ASSRCS = 
