@@ -44,6 +44,22 @@
 #define DEBUG_USART_SERCOM_PINMUX_PAD2 PINMUX_UNUSED
 #define DEBUG_USART_SERCOM_PINMUX_PAD3 PINMUX_UNUSED
 
+// BTN1 @ PA02
+#define BUTTON_1_PIN                   PIN_PA02
+#define BUTTON_1_ACTIVE                1
+#define BUTTON_1_EIC_PIN               PIN_PA02A_EIC_EXTINT2
+#define BUTTON_1_EIC_MUX               MUX_PA02A_EIC_EXTINT2
+#define BUTTON_1_EIC_PINMUX            PINMUX_PA02A_EIC_EXTINT2
+#define BUTTON_1_EIC_LINE              2
+
+// BTN2 @ PA07
+#define BUTTON_2_PIN                   PIN_PA07
+#define BUTTON_2_ACTIVE                1
+#define BUTTON_2_EIC_PIN               PIN_PA07A_EIC_EXTINT7
+#define BUTTON_2_EIC_MUX               MUX_PA07A_EIC_EXTINT7
+#define BUTTON_2_EIC_PINMUX            PINMUX_PA07A_EIC_EXTINT7
+#define BUTTON_2_EIC_LINE              7
+
 // MISO @ PA08
 // MOSI @ PA10
 // SCK @ PA11
