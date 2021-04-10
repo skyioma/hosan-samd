@@ -99,6 +99,7 @@ CSRCS = \
        EPD/ImageData.c                                    \
        drv_nrf24l01p.c                                    \
        hal_delay.c                                        \
+       hal_extint.c                                       \
        hal_gpio.c                                         \
        hal_i2c.c                                          \
        hal_rtc.c                                          \

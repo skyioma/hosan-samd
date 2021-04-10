@@ -36,6 +36,7 @@
 #include "drv_nrf24l01p.h"
 
 #include "hal_delay.h"
+#include "hal_extint.h"
 #include "hal_gpio.h"
 #include "hal_i2c.h"
 #include "hal_rtc.h"
@@ -76,6 +77,7 @@ int main(void)
   system_init();
   dbg_init();
   hal_delay_init();
+  hal_extint_init();
   hal_gpio_init();
   hal_i2c_init();
   hal_rtc_init();
