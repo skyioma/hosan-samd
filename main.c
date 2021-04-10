@@ -33,6 +33,7 @@
 
 #include <BSEC/bsec_iot_example.h>
 
+#include "drv_keyboard.h"
 #include "drv_nrf24l01p.h"
 
 #include "hal_delay.h"
@@ -46,6 +47,9 @@
 
 uint32_t main_counter;
 char main_string[] = "Main task iteration: 0x00000000\r\n";
+
+static void keyboard_task_init(void);
+static void keyboard_task(void *params);
 
 static void main_task(void *params)
 {
@@ -71,6 +75,39 @@ static void main_task(void *params)
   } while(1);
 }
 
+void keyboard_task(void *params)
+{
+  EventGroupHandle_t event_group = (EventGroupHandle_t)params;
+  uint32_t timeout = 1000;
+
+  const struct button_handler handler = {};
+
+  drv_keyboard_set_handlers(&handler);
+
+  while (1) {
+    const EventBits_t event_bits = xEventGroupWaitBits(event_group, // xEventGroup
+                                                       0x0F,        // uxBitsToWaitFor
+                                                       pdTRUE,      // xClearOnExit
+                                                       pdFALSE,     // xWaitForAllBits
+                                                       timeout);    // xTicksToWait
+
+    drv_keyboard_event_bits(event_bits, xTaskGetTickCount(), &timeout);
+  }
+}
+
+void keyboard_task_init()
+{
+  EventGroupHandle_t event_group = xEventGroupCreate();
+
+  hal_extint_set_event_group(event_group);
+
+  xTaskCreate(&keyboard_task,
+    (const char *)"KBD task",
+    configMINIMAL_STACK_SIZE + 512,
+    (void *)event_group,
+    configMAX_PRIORITIES - 1,
+    NULL);
+}
 
 int main(void)
 {
@@ -98,6 +135,8 @@ int main(void)
     NULL,
     tskIDLE_PRIORITY + 2,
     NULL);
+
+  keyboard_task_init();
 
   vTaskStartScheduler();
 }
