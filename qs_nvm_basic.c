@@ -37,50 +37,41 @@ void configure_nvm(void);
 
 void configure_nvm(void)
 {
-	struct nvm_config config_nvm;
+  struct nvm_config config_nvm;
 
-	nvm_get_config_defaults(&config_nvm);
+  nvm_get_config_defaults(&config_nvm);
 
-	config_nvm.manual_page_write = false;
+  config_nvm.manual_page_write = false;
 
-	nvm_set_config(&config_nvm);
+  nvm_set_config(&config_nvm);
 }
 
 int main(void)
 {
-	configure_nvm();
+  configure_nvm();
 
-	uint8_t page_buffer[NVMCTRL_PAGE_SIZE];
+  uint8_t page_buffer[NVMCTRL_PAGE_SIZE];
 
-	for (uint32_t i = 0; i < NVMCTRL_PAGE_SIZE; i++) {
-		page_buffer[i] = i;
-	}
+  for (uint32_t i = 0; i < NVMCTRL_PAGE_SIZE; i++) {
+    page_buffer[i] = i;
+  }
 
-	enum status_code error_code;
+  enum status_code error_code;
 
-	do
-	{
-		error_code = nvm_erase_row(
-				100 * NVMCTRL_ROW_PAGES * NVMCTRL_PAGE_SIZE);
-	} while (error_code == STATUS_BUSY);
+  do {
+    error_code = nvm_erase_row(100 * NVMCTRL_ROW_PAGES * NVMCTRL_PAGE_SIZE);
+  } while (error_code == STATUS_BUSY);
 
-	do
-	{
-		error_code = nvm_write_buffer(
-				100 * NVMCTRL_ROW_PAGES * NVMCTRL_PAGE_SIZE,
-				page_buffer, NVMCTRL_PAGE_SIZE);
-	} while (error_code == STATUS_BUSY);
+  do {
+    error_code = nvm_write_buffer(100 * NVMCTRL_ROW_PAGES * NVMCTRL_PAGE_SIZE, page_buffer, NVMCTRL_PAGE_SIZE);
+  } while (error_code == STATUS_BUSY);
 
-	do
-	{
-		error_code = nvm_read_buffer(
-				100 * NVMCTRL_ROW_PAGES * NVMCTRL_PAGE_SIZE,
-				page_buffer, NVMCTRL_PAGE_SIZE);
-	} while (error_code == STATUS_BUSY);
+  do {
+    error_code = nvm_read_buffer(100 * NVMCTRL_ROW_PAGES * NVMCTRL_PAGE_SIZE, page_buffer, NVMCTRL_PAGE_SIZE);
+  } while (error_code == STATUS_BUSY);
 
 
-	while (true) {
-		/* Do nothing */
-	}
+  while (true) {
+    /* Do nothing */
+  }
 }
-
