@@ -81,6 +81,7 @@
 
 #include <asf.h>
 #include <hal_i2c.h>
+#include <hal_nvm.h>
 #include <radio.h>
 #include <string.h>
 
@@ -183,13 +184,11 @@ static void output_ready(int64_t timestamp, float iaq, uint8_t iaq_accuracy, flo
  */
 static uint32_t state_load(uint8_t *state_buffer, uint32_t n_buffer)
 {
-    // ...
-    // Load a previous library state from non-volatile memory, if available.
-    //
-    // Return zero if loading was unsuccessful or no state was available, 
-    // otherwise return length of loaded state string.
-    // ...
-    return 0;
+    const uint32_t length = hal_nvm_bsec_state_load(state_buffer, n_buffer);
+
+    dbg_print_str(length > 0 ? "bsec state loaded\r\n" : "failed to load bsec state\r\n");
+
+    return length;
 }
 
 /*!
@@ -202,9 +201,10 @@ static uint32_t state_load(uint8_t *state_buffer, uint32_t n_buffer)
  */
 static void state_save(const uint8_t *state_buffer, uint32_t length)
 {
-    // ...
-    // Save the string some form of non-volatile memory, if possible.
-    // ...
+    if (hal_nvm_bsec_state_save(state_buffer, length) == length)
+        dbg_print_str("bsec state saved\r\n");
+    else
+        dbg_print_str("failed to save bsec state\r\n");
 }
  
 /*!
