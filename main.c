@@ -43,6 +43,7 @@
 #include "hal_nvm.h"
 #include "hal_rtc.h"
 #include "hal_spi.h"
+#include "views.h"
 
 #include "EPD/EPD_Test.h"
 
@@ -59,6 +60,9 @@ static void main_task(void *params)
   hal_delay_ms(1);
   EPD_2in13_test();
   hal_gpio_set(EN_33VA_PIN, !EN_33VA_ACTIVE);
+#else
+  views_init();
+  views_paint();
 #endif
 
   do {
@@ -81,7 +85,7 @@ void keyboard_task(void *params)
   EventGroupHandle_t event_group = (EventGroupHandle_t)params;
   uint32_t timeout = 1000;
 
-  const struct button_handler handler = {};
+  const struct button_handler handler = { .button_1 = view_handle_button_1 };
 
   drv_keyboard_set_handlers(&handler);
 
