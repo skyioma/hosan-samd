@@ -49,6 +49,9 @@
 #define BUTTON_1_EIC_PINMUX            PINMUX_PA02A_EIC_EXTINT2
 #define BUTTON_1_EIC_LINE              2
 
+// VBAT_ADC @ PA03 AIN[1]
+#define VBAT_ADC_INPUT                 ADC_POSITIVE_INPUT_PIN1
+
 // BTN2 @ PA07
 #define BUTTON_2_PIN                   PIN_PA07
 #define BUTTON_2_ACTIVE                1
