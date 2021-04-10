@@ -104,6 +104,7 @@ CSRCS = \
        hal_extint.c                                       \
        hal_gpio.c                                         \
        hal_i2c.c                                          \
+       hal_nvm.c                                          \
        hal_rtc.c                                          \
        hal_spi.c                                          \
        main.c                                             \

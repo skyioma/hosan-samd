@@ -40,6 +40,7 @@
 #include "hal_extint.h"
 #include "hal_gpio.h"
 #include "hal_i2c.h"
+#include "hal_nvm.h"
 #include "hal_rtc.h"
 #include "hal_spi.h"
 
@@ -117,6 +118,7 @@ int main(void)
   hal_extint_init();
   hal_gpio_init();
   hal_i2c_init();
+  hal_nvm_init();
   hal_rtc_init();
   hal_spi_init();
 
