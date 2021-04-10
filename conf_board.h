@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 dummy board configuration.
+ * \brief SAM D21 Custom board configuration.
  *
  * Copyright (c) 2012-2018 Microchip Technology Inc. and its subsidiaries.
  *
@@ -29,9 +29,6 @@
  *
  * \asf_license_stop
  *
- */
-/*
- * Support and FAQ: visit <a href="https://www.microchip.com/support/">Microchip Support</a>
  */
 
 #ifndef CONF_BOARD_H_INCLUDED
