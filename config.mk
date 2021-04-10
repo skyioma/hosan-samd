@@ -57,6 +57,7 @@ CSRCS = \
        common2/services/delay/sam0/cycle_counter.c        \
        sam0/drivers/extint/extint_callback.c              \
        sam0/drivers/extint/extint_sam_d_r_h/extint.c      \
+       sam0/drivers/nvm/nvm.c                             \
        sam0/drivers/port/port.c                           \
        sam0/drivers/rtc/rtc_sam_d_r_h/rtc_count.c         \
        sam0/drivers/rtc/rtc_sam_d_r_h/rtc_count_interrupt.c \
@@ -122,6 +123,7 @@ INC_PATH = \
        sam0/boards/dummy                                  \
        sam0/drivers/extint                                \
        sam0/drivers/extint/extint_sam_d_r_h               \
+       sam0/drivers/nvm                                   \
        sam0/drivers/port                                  \
        sam0/drivers/rtc                                   \
        sam0/drivers/rtc/rtc_sam_d_r_h                     \
