@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 dummy board configuration.
+ * \brief SAM D21 Custom board configuration.
  *
  * Copyright (c) 2012-2018 Microchip Technology Inc. and its subsidiaries.
  *
@@ -49,6 +49,9 @@
 #define BUTTON_1_EIC_PINMUX            PINMUX_PA02A_EIC_EXTINT2
 #define BUTTON_1_EIC_LINE              2
 
+// VBAT_ADC @ PA03 AIN[1]
+#define VBAT_ADC_INPUT                 ADC_POSITIVE_INPUT_PIN1
+
 // BTN2 @ PA07
 #define BUTTON_2_PIN                   PIN_PA07
 #define BUTTON_2_ACTIVE                1
@@ -76,9 +79,21 @@
 #define NRF_CE_PIN                     PIN_PA15
 #define NRF_CE_ACTIVE                  1
 
+// HP_LED @ PA18
+#define LED_WHITE_PIN                  PIN_PA18
+#define LED_WHITE_ACTIVE               1
+
 // EN_33VA_N @ PA19: GPIO out
 #define EN_33VA_PIN                    PIN_PA19
 #define EN_33VA_ACTIVE                 0
+
+// LED2_N @ PA22
+#define LED_RED_PIN                    PIN_PA22
+#define LED_RED_ACTIVE                 0
+
+// LED1_N @ PA23
+#define LED_YELLOW_PIN                 PIN_PA23
+#define LED_YELLOW_ACTIVE              0
 
 // E_CS @ PA24: GPIO out
 #define E_CS_PIN                       PIN_PA24
