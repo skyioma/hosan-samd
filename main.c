@@ -36,6 +36,7 @@
 #include "drv_keyboard.h"
 #include "drv_nrf24l01p.h"
 
+#include "hal_adc.h"
 #include "hal_delay.h"
 #include "hal_extint.h"
 #include "hal_gpio.h"
@@ -118,6 +119,7 @@ int main(void)
 {
   system_init();
   dbg_init();
+  hal_adc_init();
   hal_delay_init();
   hal_extint_init();
   hal_gpio_init();

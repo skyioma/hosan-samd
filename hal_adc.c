@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM ADC Quick Start
+ * \brief SAM D21 ADC
  *
  * Copyright (c) 2013-2018 Microchip Technology Inc. and its subsidiaries.
  *
@@ -30,44 +30,41 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="https://www.microchip.com/support/">Microchip Support</a>
- */
+
 #include <asf.h>
 
-void configure_adc(void);
+#include "hal_adc.h"
 
-struct adc_module adc_instance;
+uint16_t status_battery_voltage;
 
-void configure_adc(void)
+static struct adc_module adc_instance;
+
+void hal_adc_init()
 {
-	struct adc_config config_adc;
-	adc_get_config_defaults(&config_adc);
+  struct adc_config config_adc;
 
-#if (SAMC21)
-	adc_init(&adc_instance, ADC1, &config_adc);
-#else
-	adc_init(&adc_instance, ADC, &config_adc);
-#endif
+  adc_get_config_defaults(&config_adc);
 
-	adc_enable(&adc_instance);
+  config_adc.clock_prescaler = ADC_CLOCK_PRESCALER_DIV8;
+  config_adc.positive_input  = VBAT_ADC_INPUT;
+
+  adc_init(&adc_instance, ADC, &config_adc);
 }
 
-int main(void)
+uint16_t hal_adc_read_vbat_mv()
 {
-	system_init();
+  adc_enable(&adc_instance);
 
-	configure_adc();
+  adc_start_conversion(&adc_instance);
 
-	adc_start_conversion(&adc_instance);
+  uint16_t result;
 
-	uint16_t result;
+  do {
+    /* Wait for conversion to be done and read out result */
+  } while (adc_read(&adc_instance, &result) == STATUS_BUSY);
 
-	do {
-		/* Wait for conversion to be done and read out result */
-	} while (adc_read(&adc_instance, &result) == STATUS_BUSY);
+  adc_disable(&adc_instance);
 
-	while (1) {
-		/* Infinite loop */
-	}
+  status_battery_voltage = (float)result * 1.0 / 4095 / 42.2 * (100 + 42.2) * 1000;
+  return status_battery_voltage;
 }

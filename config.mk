@@ -101,6 +101,7 @@ CSRCS = \
        EPD/ImageData.c                                    \
        drv_keyboard.c                                     \
        drv_nrf24l01p.c                                    \
+       hal_adc.c                                          \
        hal_delay.c                                        \
        hal_extint.c                                       \
        hal_gpio.c                                         \
