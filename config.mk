@@ -55,6 +55,8 @@ CSRCS = \
        common/services/freertos/dbg_print/dbg_print.c     \
        common/utils/interrupt/interrupt_sam_nvic.c        \
        common2/services/delay/sam0/cycle_counter.c        \
+       sam0/drivers/extint/extint_callback.c              \
+       sam0/drivers/extint/extint_sam_d_r_h/extint.c      \
        sam0/drivers/port/port.c                           \
        sam0/drivers/rtc/rtc_sam_d_r_h/rtc_count.c         \
        sam0/drivers/rtc/rtc_sam_d_r_h/rtc_count_interrupt.c \
@@ -95,8 +97,10 @@ CSRCS = \
        EPD/Fonts/font8.c                                  \
        EPD/GUI/GUI_Paint.c                                \
        EPD/ImageData.c                                    \
+       drv_keyboard.c                                     \
        drv_nrf24l01p.c                                    \
        hal_delay.c                                        \
+       hal_extint.c                                       \
        hal_gpio.c                                         \
        hal_i2c.c                                          \
        hal_rtc.c                                          \
@@ -116,6 +120,8 @@ INC_PATH = \
        common2/services/delay/sam0                        \
        sam0/boards                                        \
        sam0/boards/dummy                                  \
+       sam0/drivers/extint                                \
+       sam0/drivers/extint/extint_sam_d_r_h               \
        sam0/drivers/port                                  \
        sam0/drivers/rtc                                   \
        sam0/drivers/rtc/rtc_sam_d_r_h                     \
@@ -196,6 +202,7 @@ CPPFLAGS = \
        -D BME680_FLOAT_POINT_COMPENSATION                 \
        -D BOARD=DUMMY_BOARD                               \
        -D CYCLE_MODE -D F_CPU=8000000                     \
+       -D EXTINT_CALLBACK_MODE=true                       \
        -D I2C_MASTER_CALLBACK_MODE=false                  \
        -D RTC_COUNT_ASYNC=true                            \
        -D SPI_CALLBACK_MODE=false                         \
