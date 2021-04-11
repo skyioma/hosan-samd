@@ -172,7 +172,7 @@ static const struct view_desc *views_array[VI_COUNT] = {
   &menu_desc,
 };
 
-static struct position position_cache[5];
+static struct position position_cache[__COUNTER__];
 
 static UBYTE *BlackImage;
 
@@ -226,8 +226,10 @@ void fill_position_cache()
 
 void views_init()
 {
-  if (sizeof(position_cache) / sizeof(position_cache[0]) < __COUNTER__)
+  if (sizeof(position_cache) / sizeof(position_cache[0]) != __COUNTER__ - 1) {
+    dbg_print_str("failed to init views\r\n");
     return;
+  }
 
   fill_position_cache();
 
@@ -239,6 +241,7 @@ void views_init()
   UWORD Imagesize = ((EPD_2IN13_WIDTH % 8 == 0)? (EPD_2IN13_WIDTH / 8 ): (EPD_2IN13_WIDTH / 8 + 1)) * EPD_2IN13_HEIGHT;
 
   if ((BlackImage = (UBYTE *)malloc(Imagesize)) == NULL) {
+    dbg_print_str("failed to init views\r\n");
     return;
   }
 
