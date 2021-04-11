@@ -1,13 +1,16 @@
 #include "views.h"
 
+#include <BSEC/bsec_integration.h>
+
 #include <EPD/Config/Debug.h>
 #include <EPD/Config/DEV_Config.h>
 #include <EPD/GUI/GUI_Paint.h>
 #include <EPD/e-Paper/EPD_2in13.h>
 
-#define ITEM_ICON_SYMBOLS_COUNT 4
-
+#include "hal_nvm.h"
 #include "sensor_data.h"
+
+#define ITEM_ICON_SYMBOLS_COUNT 4
 
 // Depends on title font position and height.
 #define X_START_POS 2
@@ -73,6 +76,8 @@ struct view_desc {
 };
 
 static void sensors_var1_background_painter(void);
+static void device_reboot(void);
+static void bsec_iot_save_state_wrapper(void);
 
 static const struct item_desc item_desc_sensors_var1_this_vbat = {
   .item_icon = "mV ",
@@ -144,23 +149,33 @@ static const struct view_desc view_desc_sensors_var1 = {
   .first_item = &item_desc_sensors_var1_this_bsec_status
 };
 
-static const struct item_desc item_desc_menu_save = {
-  .item_text = "State Save",
-  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 15 },
+static const struct item_desc item_desc_menu_device_reboot = {
+  .item_text = "Device Reboot",
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 20 },
+  .button_handler = device_reboot,
   .cache_index = __COUNTER__
 };
 
-static const struct item_desc item_desc_menu_load = {
-  .item_text = "State Load",
-  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_ABS_Y, .chars_count = 15 },
+static const struct item_desc item_desc_menu_state_erase = {
+  .item_text = "State Erase",
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 20 },
   .cache_index = __COUNTER__,
-  .next_item = &item_desc_menu_save
+  .button_handler = hal_nvm_bsec_state_erase,
+  .next_item = &item_desc_menu_device_reboot
+};
+
+static const struct item_desc item_desc_menu_state_save = {
+  .item_text = "State Save",
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_ABS_Y, .chars_count = 20 },
+  .button_handler = bsec_iot_save_state_wrapper,
+  .cache_index = __COUNTER__,
+  .next_item = &item_desc_menu_state_erase
 };
 
 // VI_MENU_STATE
 static const struct view_desc menu_desc = {
   .view_title = "Menu",
-  .first_item = &item_desc_menu_load
+  .first_item = &item_desc_menu_state_save
 };
 
 static enum view_id prev_view_id = VI_COUNT;
@@ -459,4 +474,15 @@ void view_handle_button_1(enum button_press_kind kind)
     current_item_index = 0;
     (void)paint_item_rectangle(current_item_index, BLACK);
   }
+}
+
+void device_reboot()
+{
+  dbg_print_str("rebooting...\r\n");
+  system_reset();
+}
+
+void bsec_iot_save_state_wrapper()
+{
+  (void)bsec_iot_save_state();
 }
