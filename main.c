@@ -76,9 +76,10 @@ static void main_task(void *params)
 #else
     dbg_print_char('.');
     sensor_update_vbat(hal_adc_read_vbat_mv());
+    views_update();
 #endif
 
-    vTaskDelay(1000 / portTICK_RATE_MS);
+    vTaskDelay(10000 / portTICK_RATE_MS);
   } while(1);
 }
 

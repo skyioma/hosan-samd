@@ -270,6 +270,11 @@ void views_paint()
   EPD_2IN13_Clear();
   EPD_2IN13_Init(EPD_2IN13_PART);
 
+  views_update();
+}
+
+void views_update()
+{
   const struct view_desc *cur_view = views_array[current_view_id];
 
   Paint_Clear(WHITE);
@@ -282,9 +287,25 @@ void views_paint()
 
   while (cur_item != NULL) {
     const uint8_t cache_index = cur_item->cache_index;
+    const char* text = NULL;
 
-    Paint_DrawString_EN(position_cache[cache_index].x1, position_cache[cache_index].y1,
-                        cur_item->item_text, cur_item->position_desc.font, WHITE, BLACK);
+    if (cur_item->item_text != NULL)
+      text = cur_item->item_text;
+    else if (cur_item->getter != NULL)
+      text = cur_item->getter(6);
+
+    if (text == NULL)
+      text = "";
+
+    uint16_t x = position_cache[cache_index].x1;
+
+    Paint_DrawString_EN(x, position_cache[cache_index].y1,
+                        cur_item->item_icon, cur_item->position_desc.font, WHITE, BLACK);
+
+    x += (ITEM_ICON_SYMBOLS_COUNT - 1) * cur_item->position_desc.font->Width;
+
+    Paint_DrawString_EN(x, position_cache[cache_index].y1,
+                        text, cur_item->position_desc.font, WHITE, BLACK);
 
     cur_item = cur_item->next_item;
   }
@@ -294,12 +315,14 @@ void views_paint()
 
 void sensors_var1_background_painter()
 {
+#if 0
   Paint_DrawString_EN(2, 122 - 24, "Wed", &Font24, WHITE, BLACK);
   Paint_DrawString_EN(2 + 17 * 3 + 8, 122 - 24, "Mar", &Font24, WHITE, BLACK);
   Paint_DrawNum(2 + 17 * 3 + 8 + 17 * 3 + 8, 122 - 24, 31, &Font24, BLACK, WHITE);
   Paint_DrawNum(2 + 17 * 3 + 8 + 17 * 3 + 8 + 17 * 2 + 12, 122 - 24, 12, &Font24, BLACK, WHITE);
   Paint_DrawString_EN(2 + 17 * 3 + 8 + 17 * 3 + 8 + 17 * 2 + 12 + 17 * 2, 122 - (24 + 20) / 2, ":", &Font20, WHITE, BLACK);
   Paint_DrawNum(2 + 17 * 3 + 8 + 17 * 3 + 8 + 17 * 2 + 12 + 17 * 2 + 14, 122 - 24, 34, &Font24, BLACK, WHITE);
+#endif
 }
 
 const struct position *find_position_cache(int8_t index)
