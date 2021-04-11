@@ -56,9 +56,12 @@ static void keyboard_task(void *params);
 
 static void main_task(void *params)
 {
-#if 0
+  vTaskDelay(5000 / portTICK_RATE_MS);
+
   hal_gpio_set(EN_33VA_PIN, EN_33VA_ACTIVE);
   hal_delay_ms(1);
+
+#if 0
   EPD_2in13_test();
   hal_gpio_set(EN_33VA_PIN, !EN_33VA_ACTIVE);
 #else
