@@ -108,3 +108,15 @@ uint32_t hal_nvm_bsec_state_load(uint8_t *state_buffer, uint32_t n_buffer)
   memcpy(state_buffer, ptr + 8, length);
   return length;
 }
+
+void hal_nvm_bsec_state_erase()
+{
+  uint32_t address = FLASH_SIZE - NVMCTRL_ROW_SIZE;
+  enum status_code error_code;
+
+  do {
+    error_code = nvm_erase_row(address);
+  } while (error_code == STATUS_BUSY);
+
+  dbg_print_str("bsec state erased\r\n");
+}

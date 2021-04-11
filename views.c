@@ -1,11 +1,16 @@
 #include "views.h"
 
+#include <BSEC/bsec_integration.h>
+
 #include <EPD/Config/Debug.h>
 #include <EPD/Config/DEV_Config.h>
 #include <EPD/GUI/GUI_Paint.h>
 #include <EPD/e-Paper/EPD_2in13.h>
 
-#define ITEM_ICON_SYMBOLS_COUNT 3
+#include "hal_nvm.h"
+#include "sensor_data.h"
+
+#define ITEM_ICON_SYMBOLS_COUNT 4
 
 // Depends on title font position and height.
 #define X_START_POS 2
@@ -57,6 +62,7 @@ struct item_desc {
   char item_icon[ITEM_ICON_SYMBOLS_COUNT];
   uint8_t item_flags;
   const char* item_text;
+  const char* (*getter)(uint8_t width);
   struct position_desc position_desc;
   uint8_t cache_index;
   void (*button_handler)(void);
@@ -70,79 +76,106 @@ struct view_desc {
 };
 
 static void sensors_var1_background_painter(void);
+static void device_reboot(void);
+static void bsec_iot_save_state_wrapper(void);
 
-static const struct item_desc item_desc_sensors_var1_this_humidity = {
-  .item_icon = {},
-  .item_flags = 0x00,
-  .item_text = "    50",
-  .position_desc = {
-    .font = &Font12,
-    .pos_flags = PF_REL_X | PF_ABS_Y,
-    .x0_add = 0,
-    .y0_add = 0,
-    .chars_count = 10
-  },
-  .cache_index = __COUNTER__,
-  .button_handler = NULL,
-  .next_item = NULL
+static const struct item_desc item_desc_sensors_var1_this_vbat = {
+  .item_icon = "mV ",
+  .getter = sensor_get_last_vbat,
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 10 },
+  .cache_index = __COUNTER__
 };
 
-static const struct item_desc item_desc_sensors_var1_this_temperature = {
-  .item_icon = {},
-  .item_flags = 0x00,
-  .item_text = "    25",
-  .position_desc = {
-    .font = &Font12,
-    .pos_flags = PF_ABS_X | PF_REL_Y,
-    .x0_add = 0,
-    .y0_add = 0,
-    .chars_count = 10
-  },
+static const struct item_desc item_desc_sensors_var1_this_humidity = {
+  .item_icon = "H %",
+  .getter = sensor_get_last_humidity,
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 10 },
   .cache_index = __COUNTER__,
-  .button_handler = NULL,
+  .next_item = &item_desc_sensors_var1_this_vbat
+};
+
+static const struct item_desc item_desc_sensors_var1_this_pressure = {
+  .item_icon = "Pa ",
+  .getter = sensor_get_last_pressure,
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 10 },
+  .cache_index = __COUNTER__,
   .next_item = &item_desc_sensors_var1_this_humidity
 };
 
-static const struct item_desc item_desc_sensors_var1_this_iaq = {
-  .item_icon = {},
-  .item_flags = 0x00,
-  .item_text = "   250",
-  .position_desc = {
-    .font = &Font12,
-    .pos_flags = PF_ABS_X | PF_ABS_Y,
-    .x0_add = 0,
-    .y0_add = 0,
-    .chars_count = 10
-  },
+static const struct item_desc item_desc_sensors_var1_this_temperature = {
+  .item_icon = "T'C",
+  .getter = sensor_get_last_temperature,
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 10 },
   .cache_index = __COUNTER__,
-  .button_handler = NULL,
+  .next_item = &item_desc_sensors_var1_this_pressure
+};
+
+static const struct item_desc item_desc_sensors_var1_this_static_iaq = {
+  .item_icon = "STA",
+  .getter = sensor_get_last_static_iaq,
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 10 },
+  .cache_index = __COUNTER__,
   .next_item = &item_desc_sensors_var1_this_temperature
+};
+
+static const struct item_desc item_desc_sensors_var1_this_iaq_accuracy = {
+  .item_icon = "ACC",
+  .getter = sensor_get_last_iaq_accuracy,
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 10 },
+  .cache_index = __COUNTER__,
+  .next_item = &item_desc_sensors_var1_this_static_iaq
+};
+
+static const struct item_desc item_desc_sensors_var1_this_iaq = {
+  .item_icon = "IAQ",
+  .getter = sensor_get_last_iaq,
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 10 },
+  .cache_index = __COUNTER__,
+  .next_item = &item_desc_sensors_var1_this_iaq_accuracy
+};
+
+static const struct item_desc item_desc_sensors_var1_this_bsec_status = {
+  .item_icon = "ST ",
+  .getter = sensor_get_last_bsec_status,
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_ABS_Y, .chars_count = 10 },
+  .cache_index = __COUNTER__,
+  .next_item = &item_desc_sensors_var1_this_iaq
 };
 
 // VI_SENSORS_VAR1
 static const struct view_desc view_desc_sensors_var1 = {
   .view_title = "View: Sensors",
   .background_painter = sensors_var1_background_painter,
-  .first_item = &item_desc_sensors_var1_this_iaq
+  .first_item = &item_desc_sensors_var1_this_bsec_status
 };
 
-static const struct item_desc item_desc_menu_save = {
-  .item_text = "State Save",
-  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 15 },
+static const struct item_desc item_desc_menu_device_reboot = {
+  .item_text = "Device Reboot",
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 20 },
+  .button_handler = device_reboot,
   .cache_index = __COUNTER__
 };
 
-static const struct item_desc item_desc_menu_load = {
-  .item_text = "State Load",
-  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_ABS_Y, .chars_count = 15 },
+static const struct item_desc item_desc_menu_state_erase = {
+  .item_text = "State Erase",
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 20 },
   .cache_index = __COUNTER__,
-  .next_item = &item_desc_menu_save
+  .button_handler = hal_nvm_bsec_state_erase,
+  .next_item = &item_desc_menu_device_reboot
+};
+
+static const struct item_desc item_desc_menu_state_save = {
+  .item_text = "State Save",
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_ABS_Y, .chars_count = 20 },
+  .button_handler = bsec_iot_save_state_wrapper,
+  .cache_index = __COUNTER__,
+  .next_item = &item_desc_menu_state_erase
 };
 
 // VI_MENU_STATE
 static const struct view_desc menu_desc = {
   .view_title = "Menu",
-  .first_item = &item_desc_menu_load
+  .first_item = &item_desc_menu_state_save
 };
 
 static enum view_id prev_view_id = VI_COUNT;
@@ -154,7 +187,7 @@ static const struct view_desc *views_array[VI_COUNT] = {
   &menu_desc,
 };
 
-static struct position position_cache[5];
+static struct position position_cache[__COUNTER__];
 
 static UBYTE *BlackImage;
 
@@ -208,8 +241,10 @@ void fill_position_cache()
 
 void views_init()
 {
-  if (sizeof(position_cache) / sizeof(position_cache[0]) < __COUNTER__)
+  if (sizeof(position_cache) / sizeof(position_cache[0]) != __COUNTER__ - 1) {
+    dbg_print_str("failed to init views\r\n");
     return;
+  }
 
   fill_position_cache();
 
@@ -221,6 +256,7 @@ void views_init()
   UWORD Imagesize = ((EPD_2IN13_WIDTH % 8 == 0)? (EPD_2IN13_WIDTH / 8 ): (EPD_2IN13_WIDTH / 8 + 1)) * EPD_2IN13_HEIGHT;
 
   if ((BlackImage = (UBYTE *)malloc(Imagesize)) == NULL) {
+    dbg_print_str("failed to init views\r\n");
     return;
   }
 
@@ -234,6 +270,11 @@ void views_paint()
   EPD_2IN13_Clear();
   EPD_2IN13_Init(EPD_2IN13_PART);
 
+  views_update();
+}
+
+void views_update()
+{
   const struct view_desc *cur_view = views_array[current_view_id];
 
   Paint_Clear(WHITE);
@@ -246,9 +287,25 @@ void views_paint()
 
   while (cur_item != NULL) {
     const uint8_t cache_index = cur_item->cache_index;
+    const char* text = NULL;
 
-    Paint_DrawString_EN(position_cache[cache_index].x1, position_cache[cache_index].y1,
-                        cur_item->item_text, cur_item->position_desc.font, WHITE, BLACK);
+    if (cur_item->item_text != NULL)
+      text = cur_item->item_text;
+    else if (cur_item->getter != NULL)
+      text = cur_item->getter(6);
+
+    if (text == NULL)
+      text = "";
+
+    uint16_t x = position_cache[cache_index].x1;
+
+    Paint_DrawString_EN(x, position_cache[cache_index].y1,
+                        cur_item->item_icon, cur_item->position_desc.font, WHITE, BLACK);
+
+    x += (ITEM_ICON_SYMBOLS_COUNT - 1) * cur_item->position_desc.font->Width;
+
+    Paint_DrawString_EN(x, position_cache[cache_index].y1,
+                        text, cur_item->position_desc.font, WHITE, BLACK);
 
     cur_item = cur_item->next_item;
   }
@@ -258,12 +315,14 @@ void views_paint()
 
 void sensors_var1_background_painter()
 {
+#if 0
   Paint_DrawString_EN(2, 122 - 24, "Wed", &Font24, WHITE, BLACK);
   Paint_DrawString_EN(2 + 17 * 3 + 8, 122 - 24, "Mar", &Font24, WHITE, BLACK);
   Paint_DrawNum(2 + 17 * 3 + 8 + 17 * 3 + 8, 122 - 24, 31, &Font24, BLACK, WHITE);
   Paint_DrawNum(2 + 17 * 3 + 8 + 17 * 3 + 8 + 17 * 2 + 12, 122 - 24, 12, &Font24, BLACK, WHITE);
   Paint_DrawString_EN(2 + 17 * 3 + 8 + 17 * 3 + 8 + 17 * 2 + 12 + 17 * 2, 122 - (24 + 20) / 2, ":", &Font20, WHITE, BLACK);
   Paint_DrawNum(2 + 17 * 3 + 8 + 17 * 3 + 8 + 17 * 2 + 12 + 17 * 2 + 14, 122 - 24, 34, &Font24, BLACK, WHITE);
+#endif
 }
 
 const struct position *find_position_cache(int8_t index)
@@ -438,4 +497,15 @@ void view_handle_button_1(enum button_press_kind kind)
     current_item_index = 0;
     (void)paint_item_rectangle(current_item_index, BLACK);
   }
+}
+
+void device_reboot()
+{
+  dbg_print_str("rebooting...\r\n");
+  system_reset();
+}
+
+void bsec_iot_save_state_wrapper()
+{
+  (void)bsec_iot_save_state();
 }

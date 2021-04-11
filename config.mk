@@ -111,6 +111,7 @@ CSRCS = \
        hal_spi.c                                          \
        main.c                                             \
        radio.c                                            \
+       sensor_data.c                                      \
        views.c
 
 # List of assembler source files.

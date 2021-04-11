@@ -44,6 +44,7 @@
 #include "hal_nvm.h"
 #include "hal_rtc.h"
 #include "hal_spi.h"
+#include "sensor_data.h"
 #include "views.h"
 
 #include "EPD/EPD_Test.h"
@@ -56,9 +57,12 @@ static void keyboard_task(void *params);
 
 static void main_task(void *params)
 {
-#if 0
+  vTaskDelay(5000 / portTICK_RATE_MS);
+
   hal_gpio_set(EN_33VA_PIN, EN_33VA_ACTIVE);
   hal_delay_ms(1);
+
+#if 0
   EPD_2in13_test();
   hal_gpio_set(EN_33VA_PIN, !EN_33VA_ACTIVE);
 #else
@@ -75,9 +79,11 @@ static void main_task(void *params)
     dbg_print_str(main_string);
 #else
     dbg_print_char('.');
+    sensor_update_vbat(hal_adc_read_vbat_mv());
+    views_update();
 #endif
 
-    vTaskDelay(1000 / portTICK_RATE_MS);
+    vTaskDelay(10000 / portTICK_RATE_MS);
   } while(1);
 }
 

@@ -74,9 +74,12 @@
 /* header files */
 /**********************************************************************************************************************/
 
+#include <asf.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "bsec_integration.h"
 
@@ -95,6 +98,12 @@ static struct bme680_dev bme680_g;
 
 /* Global temperature offset to be subtracted */
 static float bme680_temperature_offset_g = 0.0f;
+
+static uint8_t work_buffer[BSEC_MAX_WORKBUFFER_SIZE];
+static uint8_t bsec_state[BSEC_MAX_STATE_BLOB_SIZE];
+
+static state_save_fct state_save_g;
+static SemaphoreHandle_t bsec_rmutex;
 
 /**********************************************************************************************************************/
 /* functions */
@@ -161,10 +170,11 @@ return_values_init bsec_iot_init(float sample_rate, float temperature_offset, bm
 {
     return_values_init ret = {BME680_OK, BSEC_OK};
     
-    uint8_t bsec_state[BSEC_MAX_STATE_BLOB_SIZE] = {0};
     uint8_t bsec_config[BSEC_MAX_PROPERTY_BLOB_SIZE] = {0};
-    uint8_t work_buffer[BSEC_MAX_WORKBUFFER_SIZE] = {0};
     int bsec_state_len, bsec_config_len;
+
+    memset(&work_buffer, 0, sizeof(work_buffer));
+    memset(&bsec_state, 0, sizeof(bsec_state));
     
     /* Fixed I2C configuration */
     bme680_g.dev_id = BME680_I2C_ADDR_SECONDARY;
@@ -217,6 +227,14 @@ return_values_init bsec_iot_init(float sample_rate, float temperature_offset, bm
     ret.bsec_status = bme680_bsec_update_subscription(sample_rate);
     if (ret.bsec_status != BSEC_OK)
     {
+        return ret;
+    }
+
+    bsec_rmutex = xSemaphoreCreateRecursiveMutex();
+    if (bsec_rmutex == NULL)
+    {
+        ret.bme680_status = BME680_OK;
+        ret.bsec_status = BSEC_E_FREERTOS_MEMORY;
         return ret;
     }
     
@@ -488,6 +506,34 @@ static void bme680_bsec_process_data(bsec_input_t *bsec_inputs, uint8_t num_bsec
     (void)gas_percentage_acccuracy;
 }
 
+bsec_library_return_t bsec_iot_save_state()
+{
+    uint32_t bsec_state_len = 0;
+    bsec_library_return_t bsec_status;
+
+    // TODO Consider using adequate delay!
+    if (xSemaphoreTakeRecursive(bsec_rmutex, portMAX_DELAY) != pdTRUE)
+    {
+        return BSEC_E_FREERTOS_MEMORY;
+    }
+
+    memset(&bsec_state, 0, sizeof(bsec_state));
+    memset(&work_buffer, 0, sizeof(work_buffer));
+
+    bsec_status = bsec_get_state(0, bsec_state, sizeof(bsec_state), work_buffer, sizeof(work_buffer), &bsec_state_len);
+    if (bsec_status == BSEC_OK)
+    {
+        if (state_save_g != NULL)
+        {
+            state_save_g(bsec_state, bsec_state_len);
+        }
+    }
+
+    xSemaphoreGiveRecursive(bsec_rmutex);
+
+    return bsec_status;
+}
+
 /*!
  * @brief       Runs the main (endless) loop that queries sensor settings, applies them, and processes the measured data
  *
@@ -515,16 +561,18 @@ void bsec_iot_loop(sleep_fct sleep, get_timestamp_us_fct get_timestamp_us, outpu
     /* BSEC sensor settings struct */
     bsec_bme_settings_t sensor_settings;
     
-    /* Save state variables */
-    uint8_t bsec_state[BSEC_MAX_STATE_BLOB_SIZE];
-    uint8_t work_buffer[BSEC_MAX_WORKBUFFER_SIZE];
-    uint32_t bsec_state_len = 0;
+    /* Save state related variables */
     uint32_t n_samples = 0;
     
-    bsec_library_return_t bsec_status = BSEC_OK;
+    state_save_g = state_save;
 
     while (1)
     {
+        if (xSemaphoreTakeRecursive(bsec_rmutex, portMAX_DELAY) != pdTRUE)
+        {
+            continue;
+        }
+
         /* get the timestamp in nanoseconds before calling bsec_sensor_control() */
         time_stamp = get_timestamp_us() * 1000;
         
@@ -547,14 +595,11 @@ void bsec_iot_loop(sleep_fct sleep, get_timestamp_us_fct get_timestamp_us, outpu
         /* Retrieve and store state if the passed save_intvl */
         if (n_samples >= save_intvl)
         {
-            bsec_status = bsec_get_state(0, bsec_state, sizeof(bsec_state), work_buffer, sizeof(work_buffer), &bsec_state_len);
-            if (bsec_status == BSEC_OK)
-            {
-                state_save(bsec_state, bsec_state_len);
-            }
+            bsec_iot_save_state();
             n_samples = 0;
         }
-        
+
+        xSemaphoreGiveRecursive(bsec_rmutex);
         
         /* Compute how long we can sleep until we need to call bsec_sensor_control() next */
         /* Time_stamp is converted from microseconds to nanoseconds first and then the difference to milliseconds */

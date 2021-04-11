@@ -155,6 +155,8 @@ return_values_init bsec_iot_init(float sample_rate, float temperature_offset, bm
 void bsec_iot_loop(sleep_fct sleep, get_timestamp_us_fct get_timestamp_us, output_ready_fct output_ready,
     state_save_fct state_save, uint32_t save_intvl);
 
+bsec_library_return_t bsec_iot_save_state(void);
+
 #ifdef __cplusplus
 }
 #endif
