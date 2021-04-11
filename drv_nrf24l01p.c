@@ -61,9 +61,11 @@ void write_command(uint8_t cmd, const uint8_t *data, uint8_t data_len)
   if (data != NULL)
     memcpy(&write_buf[1], data, data_len);
 
+  hal_spi_take();
   port_pin_set_output_level(NRF_CS_PIN, NRF_CS_ACTIVE);
   (void)hal_spi_transceive_data(write_buf, read_buf, data_len + 1);
   port_pin_set_output_level(NRF_CS_PIN, !NRF_CS_ACTIVE);
+  hal_spi_give();
 }
 
 void write_register_u8(uint8_t reg, uint8_t data)
@@ -79,9 +81,11 @@ void write_register(uint8_t reg, const uint8_t *data, uint8_t data_len)
   write_buf[0] = NRF24_COMMAND_W_REGISTER | reg;
   memcpy(&write_buf[1], data, data_len);
 
+  hal_spi_take();
   port_pin_set_output_level(NRF_CS_PIN, NRF_CS_ACTIVE);
   (void)hal_spi_transceive_data(write_buf, read_buf, data_len + 1);
   port_pin_set_output_level(NRF_CS_PIN, !NRF_CS_ACTIVE);
+  hal_spi_give();
 }
 
 void drv_nrf24_send_noack(const uint8_t *data, uint8_t len)

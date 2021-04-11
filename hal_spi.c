@@ -34,6 +34,7 @@
 #include <asf.h>
 
 static struct spi_module spi_master_instance;
+static SemaphoreHandle_t spi_mutex;
 
 void hal_spi_init(void)
 {
@@ -50,6 +51,8 @@ void hal_spi_init(void)
   spi_init(&spi_master_instance, SPI_MODULE, &config_spi_master);
 
   spi_enable(&spi_master_instance);
+
+  spi_mutex = xSemaphoreCreateMutex();
 }
 
 void hal_spi_write_byte(uint8_t byte)
@@ -62,4 +65,14 @@ int8_t hal_spi_transceive_data(const uint8_t *write_buf, uint8_t *read_buf, uint
   // NOTE Indeed write_buf (tx_data) is const by implementation!
   (void)spi_transceive_buffer_wait(&spi_master_instance, (uint8_t *)write_buf, read_buf, size);
   return 0;
+}
+
+void hal_spi_take()
+{
+  xSemaphoreTake(spi_mutex, portMAX_DELAY);
+}
+
+void hal_spi_give()
+{
+  xSemaphoreGive(spi_mutex);
 }

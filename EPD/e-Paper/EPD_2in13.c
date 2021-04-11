@@ -87,9 +87,8 @@ parameter:
 static void EPD_2IN13_SendCommand(UBYTE Reg)
 {
     DEV_Digital_Write(EPD_DC_PIN, 0);
-    DEV_Digital_Write(EPD_CS_PIN, 0);
+    // NOTE Controls CS pin as well.
     DEV_SPI_WriteByte(Reg);
-    DEV_Digital_Write(EPD_CS_PIN, 1);
 }
 
 /******************************************************************************
@@ -100,9 +99,8 @@ parameter:
 static void EPD_2IN13_SendData(UBYTE Data)
 {
     DEV_Digital_Write(EPD_DC_PIN, 1);
-    DEV_Digital_Write(EPD_CS_PIN, 0);
+    // NOTE Controls CS pin as well.
     DEV_SPI_WriteByte(Data);
-    DEV_Digital_Write(EPD_CS_PIN, 1);
 }
 
 /******************************************************************************

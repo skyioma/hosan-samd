@@ -35,7 +35,11 @@
 
 void DEV_SPI_WriteByte(UBYTE value)
 {
+    hal_spi_take();
+    DEV_Digital_Write(EPD_CS_PIN, 0);
     hal_spi_write_byte(value);
+    DEV_Digital_Write(EPD_CS_PIN, 1);
+    hal_spi_give();
 }
 
 int DEV_Module_Init(void)
