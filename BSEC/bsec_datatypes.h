@@ -321,7 +321,8 @@ typedef enum
     BSEC_E_SET_INVALIDLENGTH = -104,                /*!< Internal error code */
     BSEC_W_SC_CALL_TIMING_VIOLATION = 100,          /*!< Difference between actual and defined sampling intervals of bsec_sensor_control() greater than allowed */
     BSEC_W_SC_MODEXCEEDULPTIMELIMIT = 101,          /*!< ULP plus is not allowed because an ULP measurement just took or will take place */ /*MOD_ONLY*/
-    BSEC_W_SC_MODINSUFFICIENTWAITTIME = 102         /*!< ULP plus is not allowed because not sufficient time passed since last ULP plus */ /*MOD_ONLY*/
+    BSEC_W_SC_MODINSUFFICIENTWAITTIME = 102,        /*!< ULP plus is not allowed because not sufficient time passed since last ULP plus */ /*MOD_ONLY*/
+    BSEC_E_FREERTOS_MEMORY = 127
 } bsec_library_return_t;
 
 /*!
