@@ -83,6 +83,7 @@
 #include <hal_i2c.h>
 #include <hal_nvm.h>
 #include <radio.h>
+#include <sensor_data.h>
 #include <string.h>
 
 /**********************************************************************************************************************/
@@ -171,6 +172,7 @@ static void output_ready(int64_t timestamp, float iaq, uint8_t iaq_accuracy, flo
             co2_equivalent, breath_voc_equivalent);
     dbg_print_str(buf);
 
+    sensor_update_bme680_data(bsec_status, iaq, iaq_accuracy, static_iaq, temperature, pressure, humidity);
     radio_send_bme680_data(bsec_status, iaq, iaq_accuracy, static_iaq, temperature, pressure, humidity);
 }
 

@@ -43,6 +43,7 @@
 #include "hal_nvm.h"
 #include "hal_rtc.h"
 #include "hal_spi.h"
+#include "sensor_data.h"
 #include "views.h"
 
 #include "EPD/EPD_Test.h"
@@ -74,6 +75,7 @@ static void main_task(void *params)
     dbg_print_str(main_string);
 #else
     dbg_print_char('.');
+    sensor_update_vbat(hal_adc_read_vbat_mv());
 #endif
 
     vTaskDelay(1000 / portTICK_RATE_MS);

@@ -5,7 +5,9 @@
 #include <EPD/GUI/GUI_Paint.h>
 #include <EPD/e-Paper/EPD_2in13.h>
 
-#define ITEM_ICON_SYMBOLS_COUNT 3
+#define ITEM_ICON_SYMBOLS_COUNT 4
+
+#include "sensor_data.h"
 
 // Depends on title font position and height.
 #define X_START_POS 2
@@ -57,6 +59,7 @@ struct item_desc {
   char item_icon[ITEM_ICON_SYMBOLS_COUNT];
   uint8_t item_flags;
   const char* item_text;
+  const char* (*getter)(uint8_t width);
   struct position_desc position_desc;
   uint8_t cache_index;
   void (*button_handler)(void);
@@ -71,59 +74,74 @@ struct view_desc {
 
 static void sensors_var1_background_painter(void);
 
-static const struct item_desc item_desc_sensors_var1_this_humidity = {
-  .item_icon = {},
-  .item_flags = 0x00,
-  .item_text = "    50",
-  .position_desc = {
-    .font = &Font12,
-    .pos_flags = PF_REL_X | PF_ABS_Y,
-    .x0_add = 0,
-    .y0_add = 0,
-    .chars_count = 10
-  },
-  .cache_index = __COUNTER__,
-  .button_handler = NULL,
-  .next_item = NULL
+static const struct item_desc item_desc_sensors_var1_this_vbat = {
+  .item_icon = "mV ",
+  .getter = sensor_get_last_vbat,
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 10 },
+  .cache_index = __COUNTER__
 };
 
-static const struct item_desc item_desc_sensors_var1_this_temperature = {
-  .item_icon = {},
-  .item_flags = 0x00,
-  .item_text = "    25",
-  .position_desc = {
-    .font = &Font12,
-    .pos_flags = PF_ABS_X | PF_REL_Y,
-    .x0_add = 0,
-    .y0_add = 0,
-    .chars_count = 10
-  },
+static const struct item_desc item_desc_sensors_var1_this_humidity = {
+  .item_icon = "H %",
+  .getter = sensor_get_last_humidity,
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 10 },
   .cache_index = __COUNTER__,
-  .button_handler = NULL,
+  .next_item = &item_desc_sensors_var1_this_vbat
+};
+
+static const struct item_desc item_desc_sensors_var1_this_pressure = {
+  .item_icon = "Pa ",
+  .getter = sensor_get_last_pressure,
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 10 },
+  .cache_index = __COUNTER__,
   .next_item = &item_desc_sensors_var1_this_humidity
 };
 
-static const struct item_desc item_desc_sensors_var1_this_iaq = {
-  .item_icon = {},
-  .item_flags = 0x00,
-  .item_text = "   250",
-  .position_desc = {
-    .font = &Font12,
-    .pos_flags = PF_ABS_X | PF_ABS_Y,
-    .x0_add = 0,
-    .y0_add = 0,
-    .chars_count = 10
-  },
+static const struct item_desc item_desc_sensors_var1_this_temperature = {
+  .item_icon = "T'C",
+  .getter = sensor_get_last_temperature,
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 10 },
   .cache_index = __COUNTER__,
-  .button_handler = NULL,
+  .next_item = &item_desc_sensors_var1_this_pressure
+};
+
+static const struct item_desc item_desc_sensors_var1_this_static_iaq = {
+  .item_icon = "STA",
+  .getter = sensor_get_last_static_iaq,
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 10 },
+  .cache_index = __COUNTER__,
   .next_item = &item_desc_sensors_var1_this_temperature
+};
+
+static const struct item_desc item_desc_sensors_var1_this_iaq_accuracy = {
+  .item_icon = "ACC",
+  .getter = sensor_get_last_iaq_accuracy,
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 10 },
+  .cache_index = __COUNTER__,
+  .next_item = &item_desc_sensors_var1_this_static_iaq
+};
+
+static const struct item_desc item_desc_sensors_var1_this_iaq = {
+  .item_icon = "IAQ",
+  .getter = sensor_get_last_iaq,
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_REL_Y, .chars_count = 10 },
+  .cache_index = __COUNTER__,
+  .next_item = &item_desc_sensors_var1_this_iaq_accuracy
+};
+
+static const struct item_desc item_desc_sensors_var1_this_bsec_status = {
+  .item_icon = "ST ",
+  .getter = sensor_get_last_bsec_status,
+  .position_desc = { .font = &Font12, .pos_flags = PF_ABS_X | PF_ABS_Y, .chars_count = 10 },
+  .cache_index = __COUNTER__,
+  .next_item = &item_desc_sensors_var1_this_iaq
 };
 
 // VI_SENSORS_VAR1
 static const struct view_desc view_desc_sensors_var1 = {
   .view_title = "View: Sensors",
   .background_painter = sensors_var1_background_painter,
-  .first_item = &item_desc_sensors_var1_this_iaq
+  .first_item = &item_desc_sensors_var1_this_bsec_status
 };
 
 static const struct item_desc item_desc_menu_save = {
