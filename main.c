@@ -76,6 +76,10 @@ static void main_task(void *params)
   sensor_register_callback(views_update, 200);
 
   while (1) {
+    hal_gpio_set(LED_YELLOW_PIN, LED_YELLOW_ACTIVE);
+    vTaskDelay(1 / portTICK_RATE_MS);
+    hal_gpio_set(LED_YELLOW_PIN, !LED_YELLOW_ACTIVE);
+
     vTaskDelay(10000 / portTICK_RATE_MS);
   }
 }
