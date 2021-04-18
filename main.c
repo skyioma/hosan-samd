@@ -49,9 +49,6 @@
 
 #include "EPD/EPD_Test.h"
 
-uint32_t main_counter;
-char main_string[] = "Main task iteration: 0x00000000\r\n";
-
 static void keyboard_task_init(void);
 static void keyboard_task(void *params);
 
@@ -70,21 +67,9 @@ static void main_task(void *params)
   views_paint();
 #endif
 
-  do {
-#if 0
-    dbg_print_str("Main task loop executing\r\n");
-
-    // Update hexadecimal 32-bit integer in string, and print it
-    dbg_sprint_hexint(&main_string[23], main_counter++);
-    dbg_print_str(main_string);
-#else
-    dbg_print_char('.');
-    sensor_update_vbat(hal_adc_read_vbat_mv());
-    views_update();
-#endif
-
+  while (1) {
     vTaskDelay(10000 / portTICK_RATE_MS);
-  } while(1);
+  }
 }
 
 void keyboard_task(void *params)
