@@ -270,4 +270,4 @@ void bsec_iot_task(void *params)
 }
 
 /*! @}*/
-
+// vim: ts=4 sw=4 fileformat=dos

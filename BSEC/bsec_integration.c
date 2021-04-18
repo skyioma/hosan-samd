@@ -612,4 +612,4 @@ void bsec_iot_loop(sleep_fct sleep, get_timestamp_us_fct get_timestamp_us, outpu
 }
 
 /*! @}*/
-
+// vim: ts=4 sw=4 fileformat=dos
