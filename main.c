@@ -51,6 +51,12 @@
 
 static void keyboard_task_init(void);
 static void keyboard_task(void *params);
+static void sensor_update_vbat_wrapper(void);
+
+void sensor_update_vbat_wrapper()
+{
+  sensor_update_vbat(hal_adc_read_vbat_mv());
+}
 
 static void main_task(void *params)
 {
@@ -66,6 +72,8 @@ static void main_task(void *params)
   views_init();
   views_paint();
 #endif
+
+  sensor_register_callback(views_update, 200);
 
   while (1) {
     vTaskDelay(10000 / portTICK_RATE_MS);
@@ -136,6 +144,8 @@ int main(void)
     NULL);
 
   keyboard_task_init();
+
+  sensor_register_callback(sensor_update_vbat_wrapper, 100);
 
   vTaskStartScheduler();
 }
