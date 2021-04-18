@@ -239,8 +239,8 @@ static int bsec_iot_main(void)
     return_values_init ret;
     
     /* Call to the function which initializes the BSEC library 
-     * Switch on low-power mode and provide no temperature offset */
-    ret = bsec_iot_init(BSEC_SAMPLE_RATE_LP, 0.0f, bus_write, bus_read, sleep, state_load, config_load);
+     * Switch on ultra-low-power mode and provide no temperature offset */
+    ret = bsec_iot_init(BSEC_SAMPLE_RATE_ULP, 0.0f, bus_write, bus_read, sleep, state_load, config_load);
     if (ret.bme680_status)
     {
         /* Could not intialize BME680 */
@@ -253,8 +253,8 @@ static int bsec_iot_main(void)
     }
     
     /* Call to endless loop function which reads and processes data based on sensor settings */
-    /* State is saved every 10.000 samples, which means every 10.000 * 3 secs = 500 minutes  */
-    bsec_iot_loop(sleep, get_timestamp_us, output_ready, state_save, 10000);
+    /* State is saved every 864 samples, which means every 864 * 300 secs = 3 days  */
+    bsec_iot_loop(sleep, get_timestamp_us, output_ready, state_save, 864);
     
     return 0;
 }
