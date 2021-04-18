@@ -3,17 +3,7 @@
 
 #include <stdint.h>
 
-struct sensor_data {
-  uint8_t bsec_status;
-  uint16_t iaq;
-  uint8_t iaq_accuracy;
-  uint16_t static_iaq;
-  int8_t temperature;
-  uint32_t pressure;
-  uint8_t humidity;
-
-  uint16_t vbat;
-};
+typedef void (*callback_t)(void);
 
 void sensor_update_bme680_data(uint8_t bsec_status, uint16_t iaq, uint8_t iaq_accuracy,
                                uint16_t static_iaq, int8_t temperature, uint32_t pressure,
@@ -30,5 +20,7 @@ const char* sensor_get_last_pressure(uint8_t width);
 const char* sensor_get_last_humidity(uint8_t width);
 
 const char* sensor_get_last_vbat(uint8_t width);
+
+void sensor_register_callback(callback_t callback, uint8_t order);
 
 #endif
